@@ -13,8 +13,6 @@ import RegisterStackScreen from "./Navigation";
 
 import { decode, encode } from "base-64";
 
-
-
 /*
 const Wrapper = styled.View`
 width: 100%;
@@ -26,9 +24,10 @@ align-items: center;
 `*/
 
 const UserInfoSchema = {
-    name: "user",
+    name: "User",
     properties: {
         _id: "int",
+        nickName: "string",
         secureKey: "string",
     },
     primaryKey: "_id",
@@ -46,27 +45,27 @@ export default function App() {
         setPassword(pw);
     };
 
-    useEffect(() => {
-        async function prepare() {
-            try {
-                const connection = await Realm.open({
-                    path: "dappDB",
-                    schema: [UserInfoSchema],
-                });
-                setRealm(realm);
-                if (password === "") {
-                    navigation;
-                }
-            } catch (e) {
-                console.warn(e);
-            } finally {
-                // Tell the application to render
-                setAppIsReady(true);
-            }
-        }
+    async function prepare() {
+        try {
+            // 스키마 생성
+            const connection = await Realm.open({
+                path: "dappDB",
+                schema: [UserInfoSchema],
+            });
+            // 테스트 용도 모든 db 테이블 삭제
+            //connection.write(() => {
+            //    connection.deleteAll();
+            //});
 
-        prepare();
-    }, []);
+            console.log(connection.objects("User"));
+            setRealm(connection);
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setAppIsReady(true);
+        }
+    }
+
     const onLayoutRootView = useCallback(async () => {
         if (appIsReady) {
             // This tells the splash screen to hide immediately! If we call this after
@@ -74,12 +73,12 @@ export default function App() {
             // loading its initial state and rendering its first pixels. So instead,
             // we hide the splash screen once we know the root view has already
             // performed layout.
-            console.log(realm, "realm");
             await SplashScreen.hideAsync();
         }
     }, [appIsReady]);
 
     if (!appIsReady) {
+        prepare();
         return null;
     }
     return (
@@ -95,7 +94,7 @@ export default function App() {
                             presentation: "modal",
                         }}
                     >
-                        {!realm ? (
+                        {realm.objects("User").length < 1 ? (
                             <Stack.Screen
                                 name="Register"
                                 component={RegisterStackScreen}

@@ -87,6 +87,7 @@ const ButtonText = styled.Text`
 
 export default function ImportWallet() {
     const [value, onChangeText] = useState("");
+
     return (
         <Wrapper>
             <ContentWrapper>
