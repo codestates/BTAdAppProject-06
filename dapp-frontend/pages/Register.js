@@ -41,11 +41,9 @@ const DivButton = styled(TouchableOpacity)`
     font-size: 400px;
     width: 90%;
     height: 30%;
-    background-color: #5e72e4;
     border-radius: 10px;
     display: flex;
     justify-content: center;
-    box-shadow: 0 1px 3px rgb(0 0 0 / 8%);
 `;
 
 const ButtonText = styled.Text`
@@ -62,17 +60,23 @@ export default function Register({ navigation }) {
                     <LogoText>Wallet</LogoText>
                 </LogoWrapper>
                 <ButtonWrapper>
-                    <DivButton onPress={() => {
-                        navigation.navigate("RegisterImport");
-                    }}>
-                        <ButtonText>지갑 가져오기</ButtonText>
+                    <DivButton>
+                        <StyledButton
+                            color="#5e72e4"
+                            title="지갑 가져오기"
+                            onPress={() => {
+                                navigation.navigate("RegisterImport");
+                            }}
+                        />
                     </DivButton>
-                    <DivButton
-                        onPress={() => {
-                            navigation.navigate("RegisterNew");
-                        }}
-                    >
-                        <ButtonText>지갑 만들기</ButtonText>
+                    <DivButton>
+                        <StyledButton
+                            color="#5e72e4"
+                            title="지갑 만들기"
+                            onPress={() => {
+                                navigation.navigate("RegisterNew");
+                            }}
+                        />
                     </DivButton>
                 </ButtonWrapper>
             </WrapperContent>

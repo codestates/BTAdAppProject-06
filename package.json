@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "@react-native-material/core": "^1.3.7",
+    "bip32": "^3.1.0",
+    "ethers": "^5.7.2",
+    "react-native-bip39": "^2.3.0"
+  },
+  "devDependencies": {
+    "crypto": "^1.0.1",
+    "eth-lightwallet": "^4.0.0",
+    "rn-nodeify": "github:tradle/rn-nodeify"
+  }
+}
