@@ -11,6 +11,10 @@ import { Text, View } from "react-native";
 import Register from "./pages/Register";
 import RegisterStackScreen from "./Navigation";
 
+import { decode, encode } from "base-64";
+
+
+
 /*
 const Wrapper = styled.View`
 width: 100%;
