@@ -1,4 +1,4 @@
-import { Button, StyleSheet, TextInput, View } from "react-native";
+import { Button, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
 import { Fontisto } from "@expo/vector-icons";
 
@@ -37,7 +37,7 @@ const LogoText = styled.Text`
     font-size: 24px;
 `;
 
-const DivButton = styled.View`
+const DivButton = styled(TouchableOpacity)`
     font-size: 400px;
     width: 90%;
     height: 30%;
@@ -46,9 +46,9 @@ const DivButton = styled.View`
     justify-content: center;
 `;
 
-const StyledButton = styled.Button`
-    height: 100%;
-    width: 100%;
+const ButtonText = styled.Text`
+    text-align: center;
+    color: #ffffff;
 `;
 
 export default function Register({ navigation }) {
