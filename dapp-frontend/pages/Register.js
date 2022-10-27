@@ -1,4 +1,11 @@
-import { Button, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+    Button,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
+} from "react-native";
 import styled from "styled-components/native";
 import { Fontisto } from "@expo/vector-icons";
 
@@ -44,6 +51,7 @@ const DivButton = styled(TouchableOpacity)`
     border-radius: 10px;
     display: flex;
     justify-content: center;
+    background-color: #5e72e4;
 `;
 
 const ButtonText = styled.Text`
@@ -60,23 +68,19 @@ export default function Register({ navigation }) {
                     <LogoText>Wallet</LogoText>
                 </LogoWrapper>
                 <ButtonWrapper>
-                    <DivButton>
-                        <StyledButton
-                            color="#5e72e4"
-                            title="지갑 가져오기"
-                            onPress={() => {
-                                navigation.navigate("RegisterImport");
-                            }}
-                        />
+                    <DivButton
+                        onPress={() => {
+                            navigation.navigate("RegisterImport");
+                        }}
+                    >
+                        <ButtonText>지갑 가져오기</ButtonText>
                     </DivButton>
-                    <DivButton>
-                        <StyledButton
-                            color="#5e72e4"
-                            title="지갑 만들기"
-                            onPress={() => {
-                                navigation.navigate("RegisterNew");
-                            }}
-                        />
+                    <DivButton
+                        onPress={() => {
+                            navigation.navigate("RegisterNew");
+                        }}
+                    >
+                        <ButtonText>지갑 만들기</ButtonText>
                     </DivButton>
                 </ButtonWrapper>
             </WrapperContent>
