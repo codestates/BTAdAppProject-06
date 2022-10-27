@@ -52,6 +52,7 @@
     "styled-components": "^5.3.6",
     "styled-components-react-native": "^1.0.0",
     "vm-browserify": "^0.0.4",
+    "web3": "^1.8.0",
     "yarn": "^1.22.19"
   },
   "devDependencies": {

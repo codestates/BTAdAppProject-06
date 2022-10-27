@@ -1,18 +1,12 @@
 import styled from "styled-components/native";
 import { Fontisto } from "@expo/vector-icons";
 import { StyleSheet, Text, TextInput as Ti } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
-import {
-    Stack,
-    TextInput,
-    IconButton,
-    Button,
-} from "@react-native-material/core";
 import "react-native-get-random-values";
 import "@ethersproject/shims";
 import { ethers } from "ethers";
-
+import { Button, TextInput } from "@react-native-material/core";
+import { useDB } from "../context";
 
 const LogoText = styled.Text`
     color: #000000;
@@ -55,25 +49,46 @@ const BodyHeaderText = styled.Text`
     font-size: 24px;
 `;
 
-const BodyContent = styled.Text`
+const MnemonicWrapper = styled.View`
+    height: 40%;
     width: 100%;
-    height: 85%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 `;
 
-const UserInfoHeader = styled.View`
-    width: 100%;
-    height: 10%;
-    padding: 10px 0 10px 0;
+const MainContent = styled.View`
+    height: 90%;
+    width: 90%;
+    border-radius: 10px;
+    border-width: 1px;
+    border-color: #000000;
+    display: flex;
+    flex-direction: row;
 `;
-const UserInfoText = styled.Text`
+
+const UserWrapper = styled.View`
+    height: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+`;
+const IdWrppaer = styled.View`
+    height: 30%;
+    width: 80%;
+    padding: 10px;
+`;
+
+const PwRapper = styled.View`
+    height: 30%;
+    width: 80%;
     padding-left: 10px;
-    color: #525f7f;
-    font-size: 24px;
 `;
 
 const NextWrapper = styled.View`
-    width: 90%;
-    height: 10%;
+    width: 100%;
+    height: 15%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -89,18 +104,45 @@ const NextButton = styled.TouchableOpacity`
 
     color: #ffffff;
 `;
-
-const ButtonText = styled.Text`
-    color: #ffffff;
+const MnemonicCon = styled.View`
+    width: 100%;
+    height: 100%;
 `;
 
-export default function ImportWallet() {
-    const [value, onChangeText] = useState("");
-    const [mnemo, setMnemo] = useState();
-
+export default function NewWallet({ navigation }) {
+    const [value, setChangeValue] = useState({});
+    const [user, setUser] = useState({});
+    const { realm, changePassword, password } = useDB();
+    console.log("get realm", realm);
     useEffect(() => {
-
+        const createWallet = async () => {
+            let randSeed = await ethers.Wallet.createRandom();
+            setUser({
+                addr: randSeed.address,
+                mne: randSeed.mnemonic.phrase,
+                priv: randSeed.privateKey,
+            });
+        };
+        createWallet();
     }, []);
+
+    const completeForm = () => {
+        console.log(value);
+        if (value.pw.length === 4 || !value.nick) {
+            console.log(value.pw, value.nic, "dont change");
+            return;
+        }
+        changePassword(value.pw);
+        console.log(realm.objects("User"));
+        realm.write(() => {
+            realm.create("User", {
+                _id: Date.now(),
+                nickName: value.nick,
+                secureKey: user.priv,
+            });
+        });
+        navigation.goBack();
+    };
 
     return (
         <Wrapper>
@@ -111,9 +153,47 @@ export default function ImportWallet() {
                 </Header>
                 <Body>
                     <BodyHeader>
-                        <BodyHeaderText>시드를 입력해주세요</BodyHeaderText>
+                        <BodyHeaderText>
+                            니모닉을 안전한 곳에 저장하세요.
+                        </BodyHeaderText>
                     </BodyHeader>
-                    <BodyContent></BodyContent>
+                    <MnemonicWrapper>
+                        <MnemonicCon>
+                            <Button title="복사하기" />
+                            <TextInput
+                                multiline
+                                variant="outlined"
+                                defaultValue={user.mne}
+                                editable={false}
+                            />
+                        </MnemonicCon>
+                    </MnemonicWrapper>
+                    <UserWrapper>
+                        <PwRapper>
+                            <TextInput
+                                label="닉네임"
+                                variant="outlined"
+                                onChangeText={(text) =>
+                                    setChangeValue({ ...value, nick: text })
+                                }
+                            ></TextInput>
+                        </PwRapper>
+                        <IdWrppaer>
+                            <TextInput
+                                label="비밀번호 입력"
+                                variant="outlined"
+                                onChangeText={(text) =>
+                                    setChangeValue({ ...value, pw: text })
+                                }
+                            ></TextInput>
+                        </IdWrppaer>
+                    </UserWrapper>
+
+                    <NextWrapper>
+                        <NextButton onPress={() => completeForm()}>
+                            <Text>완료</Text>
+                        </NextButton>
+                    </NextWrapper>
                 </Body>
             </ContentWrapper>
         </Wrapper>
