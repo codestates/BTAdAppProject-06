@@ -1,9 +1,15 @@
 import styled from "styled-components/native";
 import { Fontisto } from "@expo/vector-icons";
-import { StyleSheet, Text, TextInput as Ti } from "react-native";
+import { Alert, StyleSheet, Text, TextInput as Ti } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
 import { Stack, TextInput, Button } from "@react-native-material/core";
+import { User } from "realm";
+import { useDB } from "../context";
+import { pwValidate } from "../utils/userInfo";
+import "react-native-get-random-values";
+import "@ethersproject/shims";
+import { ethers } from "ethers";
 
 const LogoText = styled.Text`
     color: #000000;
@@ -85,8 +91,38 @@ const ButtonText = styled.Text`
     color: #ffffff;
 `;
 
-export default function ImportWallet() {
+export default function ImportWallet({ navigation }) {
     const [value, onChangeText] = useState("");
+    const { realm, changePassword, password } = useDB();
+    const [form, setForm] = useState({});
+    const [pwHelp, setPwHelp] = useState(false);
+
+    const completeForm = () => {
+        if (pwValidate(form.pw)) {
+            console.log("뭏");
+            setPwHelp(true);
+            return;
+        }
+        if (!form.mne) {
+            Alert.alert("무효한 니모닉", "니모닉 코드를 확인하세요");
+            return;
+        }
+        if (!ethers.utils.isValidMnemonic(form.mne.trim())) {
+            Alert.alert("무효한 니모닉", "니모닉 코드를 확인하세요");
+            return;
+        }
+
+        const wallet = ethers.Wallet.fromMnemonic(form.mne);
+
+        realm.write(() => {
+            realm.create("User", {
+                _id: Date.now(),
+                nickName: form.nick,
+                secureKey: wallet.privateKey,
+            });
+        });
+        navigation.goBack();
+    };
 
     return (
         <Wrapper>
@@ -103,7 +139,9 @@ export default function ImportWallet() {
                         <SafeAreaView>
                             <Ti
                                 value={value}
-                                onChangeText={(text) => onChangeText(text)}
+                                onChangeText={(txt) =>
+                                    setForm({ ...form, mne: txt })
+                                }
                                 multiline
                                 maxLength={10}
                                 placeholder="input seed key"
@@ -117,16 +155,30 @@ export default function ImportWallet() {
                                     variant="outlined"
                                     label="nickname"
                                     style={{ width: 300, padding: 10 }}
+                                    onChangeText={(txt) =>
+                                        setForm({ ...form, nick: txt })
+                                    }
                                 ></TextInput>
                                 <TextInput
+                                    onChangeText={(txt) =>
+                                        setForm({ ...form, pw: txt })
+                                    }
                                     variant="outlined"
                                     label="password"
                                     style={{ width: 300, padding: 10 }}
+                                    helperText={
+                                        pwHelp ? (
+                                            <Text style={{ color: "red" }}>
+                                                "숫자 6자리를 입력하세요."
+                                            </Text>
+                                        ) : null
+                                    }
                                 ></TextInput>
                             </Stack>
                         </UserInfoHeader>
                     </BodyContent>
                     <Button
+                        onPress={() => completeForm()}
                         title="완료"
                         style={{
                             alignSelf: "center",

@@ -53,9 +53,9 @@ export default function App() {
                 schema: [UserInfoSchema],
             });
             // 테스트 용도 모든 db 테이블 삭제
-            //connection.write(() => {
-            //    connection.deleteAll();
-            //});
+            connection.write(() => {
+                connection.deleteAll();
+            });
 
             console.log(connection.objects("User"));
             setRealm(connection);
