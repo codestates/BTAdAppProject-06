@@ -7,6 +7,7 @@ import "@ethersproject/shims";
 import { ethers } from "ethers";
 import { Button, TextInput } from "@react-native-material/core";
 import { useDB } from "../context";
+import { pwValidate } from "../utils/userInfo";
 
 const LogoText = styled.Text`
     color: #000000;
@@ -113,7 +114,8 @@ export default function NewWallet({ navigation }) {
     const [value, setChangeValue] = useState({});
     const [user, setUser] = useState({});
     const { realm, changePassword, password } = useDB();
-    console.log("get realm", realm);
+    const [pwHelp, setPwHelp] = useState(false);
+    //console.log("get realm", realm);
     useEffect(() => {
         const createWallet = async () => {
             let randSeed = await ethers.Wallet.createRandom();
@@ -127,13 +129,13 @@ export default function NewWallet({ navigation }) {
     }, []);
 
     const completeForm = () => {
-        console.log(value);
-        if (value.pw.length === 4 || !value.nick) {
-            console.log(value.pw, value.nic, "dont change");
+        //console.log(value);
+        if (pwValidate(value.pw)) {
+            setPwHelp(true);
             return;
         }
         changePassword(value.pw);
-        console.log(realm.objects("User"));
+        //console.log(realm.objects("User"));
         realm.write(() => {
             realm.create("User", {
                 _id: Date.now(),
@@ -184,6 +186,13 @@ export default function NewWallet({ navigation }) {
                                 variant="outlined"
                                 onChangeText={(text) =>
                                     setChangeValue({ ...value, pw: text })
+                                }
+                                helperText={
+                                    pwHelp ? (
+                                        <Text style={{ color: "red" }}>
+                                            "숫자 6자리를 입력하세요."
+                                        </Text>
+                                    ) : null
                                 }
                             ></TextInput>
                         </IdWrppaer>
