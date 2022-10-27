@@ -3,12 +3,7 @@ import { Fontisto } from "@expo/vector-icons";
 import { StyleSheet, Text, TextInput as Ti } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
-import {
-    Stack,
-    TextInput,
-    IconButton,
-    Button,
-} from "@react-native-material/core";
+import { Stack, TextInput, Button } from "@react-native-material/core";
 
 const LogoText = styled.Text`
     color: #000000;
