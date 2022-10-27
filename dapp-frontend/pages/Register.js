@@ -1,4 +1,4 @@
-import { Button, StyleSheet, TextInput, View } from "react-native";
+import { Button, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import styled from "styled-components/native";
 import { Fontisto } from "@expo/vector-icons";
 
@@ -37,7 +37,7 @@ const LogoText = styled.Text`
     font-size: 24px;
 `;
 
-const DivButton = styled.View`
+const DivButton = styled(TouchableOpacity)`
     font-size: 400px;
     width: 90%;
     height: 30%;
@@ -48,9 +48,9 @@ const DivButton = styled.View`
     box-shadow: 0 1px 3px rgb(0 0 0 / 8%);
 `;
 
-const StyledButton = styled.Button`
-    height: 100%;
-    width: 100%;
+const ButtonText = styled.Text`
+    text-align: center;
+    color: #ffffff;
 `;
 
 export default function Register({ navigation }) {
@@ -62,23 +62,17 @@ export default function Register({ navigation }) {
                     <LogoText>Wallet</LogoText>
                 </LogoWrapper>
                 <ButtonWrapper>
-                    <DivButton>
-                        <StyledButton
-                            color="#ffffff"
-                            title="지갑 가져오기"
-                            onPress={() => {
-                                navigation.navigate("RegisterImport");
-                            }}
-                        />
+                    <DivButton onPress={() => {
+                        navigation.navigate("RegisterImport");
+                    }}>
+                        <ButtonText>지갑 가져오기</ButtonText>
                     </DivButton>
-                    <DivButton>
-                        <StyledButton
-                            color="#ffffff"
-                            title="지갑 만들기"
-                            onPress={() => {
-                                navigation.navigate("RegisterNew");
-                            }}
-                        />
+                    <DivButton
+                        onPress={() => {
+                            navigation.navigate("RegisterNew");
+                        }}
+                    >
+                        <ButtonText>지갑 만들기</ButtonText>
                     </DivButton>
                 </ButtonWrapper>
             </WrapperContent>
