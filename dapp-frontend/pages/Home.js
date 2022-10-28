@@ -2,9 +2,12 @@ import { Button, Text, View } from "react-native";
 import styled from "styled-components/native";
 import QRCode from "react-native-qrcode-svg";
 import { Fontisto } from "@expo/vector-icons";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDB } from "../context";
 import { useNavigation } from "@react-navigation/native";
+import { TableName } from "../utils/userInfo";
+import { coinsApi } from "../utils/api";
+import { useQuery } from "@tanstack/react-query";
 
 const Wrapper = styled.View`
     width: 100%;
@@ -94,21 +97,48 @@ const MainContentButtonWrapper = styled.View`
 const DivButton = styled.TouchableOpacity`
     background-color: #5e72e4;
     width: 33%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1px;
+    border-radius: 5px;
 `;
 //color: #000000;
 //width: 33%;
 //border-radius: 1px solid #000000;
+const MainButtonText = styled.Text`
+    color: #ffffff;
+`;
+const AddressText = styled.Text`
+    color: #525f7f;
+    padding: 5px;
+`;
 
 export default function Home({ navigation }) {
     const { realm, changePassword, password } = useDB();
+    const [address, setAddr] = useState();
+    const {
+        data: price,
+        isLoading,
+        error,
+    } = useQuery(["coin"], coinsApi.getKlayPriceKrw);
+    console.log(price);
+    useEffect(() => {
+        const userInfo = realm.objects(TableName)[0];
+        //const price = coinsApi.getKlayPriceKrw();
+        console.log(userInfo);
 
+        setAddr(userInfo.address);
+    }, []);
     return (
         <Wrapper>
             <ContentWrapper>
                 <AssetsWrapper>
                     <AssetsContent>
-                        <Text>코</Text>
-                        <Text>환율</Text>
+                        <Text>klay</Text>
+                        <Text>
+                            환율 {isLoading ? null : price["klay-token"]["krw"]}
+                        </Text>
                     </AssetsContent>
                 </AssetsWrapper>
                 <MainContentWrapper>
@@ -122,15 +152,19 @@ export default function Home({ navigation }) {
                             <MainHeaderContentName>name</MainHeaderContentName>
                         </MainContentHeader>
                         <MainContentBody>
-                            <QRCode value="http://awesome.link.qr" />
-                            <Text>address</Text>
+                            <QRCode value={address} />
+                            <AddressText>{address}</AddressText>
                         </MainContentBody>
                         <MainContentButtonWrapper>
                             <DivButton color="#5e72e4">
-                                <Text>송금하기</Text>
+                                <MainButtonText>송금하기</MainButtonText>
                             </DivButton>
-                            <DivButton color="#000000" title="QR 스캔" />
-                            <DivButton color="#000000" title="결제 내역" />
+                            <DivButton color="#5e72e4">
+                                <MainButtonText>송금받기</MainButtonText>
+                            </DivButton>
+                            <DivButton color="#5e72e4">
+                                <MainButtonText>QR 스캔</MainButtonText>
+                            </DivButton>
                         </MainContentButtonWrapper>
                     </MainContent>
                 </MainContentWrapper>
