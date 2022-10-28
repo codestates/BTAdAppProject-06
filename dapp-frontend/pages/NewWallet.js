@@ -8,7 +8,8 @@ import { ethers } from "ethers";
 import { Button, TextInput } from "@react-native-material/core";
 import { useDB } from "../context";
 import { pwValidate, TableName } from "../utils/userInfo";
-import { aes256Encrypt, md5Encrypt, ojbToString } from "../utils/wallet";
+import { md5Encrypt, ojbToString } from "../utils/wallet";
+import "react-native-get-random-values";
 
 const LogoText = styled.Text`
     color: #000000;
@@ -61,7 +62,7 @@ const MnemonicWrapper = styled.View`
 `;
 
 const UserWrapper = styled.View`
-    height: 50%;
+    height: 30%;
     width: 100%;
     display: flex;
     justify-content: space-around;
@@ -86,8 +87,8 @@ const NextWrapper = styled.View`
     align-items: center;
 `;
 const NextButton = styled.TouchableOpacity`
-    width: 80%;
-    height: 90%;
+    width: 70%;
+    height: 50%;
     background-color: #5e72e4;
     display: flex;
     justify-content: center;
@@ -95,6 +96,10 @@ const NextButton = styled.TouchableOpacity`
     border-radius: 10px;
 
     color: #ffffff;
+`;
+const NextButtonText = styled.Text`
+    color: #ffffff;
+    font-weight: bold;
 `;
 const MnemonicCon = styled.View`
     width: 100%;
@@ -104,19 +109,25 @@ const MnemonicCon = styled.View`
 export default function NewWallet({ navigation }) {
     const [value, setChangeValue] = useState({});
     const [user, setUser] = useState({});
-    const { realm, changePassword, password } = useDB();
+    const { realm, changePassword, web3 } = useDB();
     const [pwHelp, setPwHelp] = useState(false);
+    const [priv, setPriv] = useState();
+    const [wallet, setWallet] = useState();
     //console.log("get realm", realm);
     useEffect(() => {
-        const createWallet = async () => {
-            let randSeed = await ethers.Wallet.createRandom();
-            setUser({
-                addr: randSeed.address,
-                mne: randSeed.mnemonic.phrase,
-                priv: randSeed.privateKey,
-            });
-        };
-        createWallet();
+        const wallet = web3.eth.accounts.create();
+        setPriv(wallet.privateKey);
+        setWallet(wallet);
+        //const createWallet = async () => {
+        //let randSeed = await ethers.Wallet.createRandom();
+        setUser({
+            addr: wallet.address,
+            //    mne: randSeed.mnemonic.phrase,
+            //    priv: randSeed.privateKey,
+        });
+        //console.log(wallet);
+        //};
+        //createWallet();
     }, []);
 
     const completeForm = () => {
@@ -125,21 +136,26 @@ export default function NewWallet({ navigation }) {
             setPwHelp(true);
             return;
         }
-        changePassword(value.pw);
+        let enc = web3.eth.accounts.encrypt(priv, value.pw);
+        //let dnc = web3.eth.accounts.decrypt(JSON.parse(enc), value.pw);
+        //console.log(enc);
+        //console.log(dnc);
+        //console.log(enc, "enc");
+        //changePassword(value.pw);
         //console.log(realm.objects("User"));
         //console.log(JSON.stringify(aes256Encrypt(user.priv, value.pw)));
-        console.log(md5Encrypt(value.pw));
-
+        //console.log(md5Encrypt(value.pw));
         realm.write(() => {
             realm.create(TableName, {
                 _id: Date.now(),
                 nickName: value.nick,
-                secureKey: user.priv,
+                secureKey: ojbToString(enc),
                 pwMD5: ojbToString(md5Encrypt(value.pw)),
                 address: user.addr,
             });
         });
 
+        changePassword(value.pw);
         navigation.goBack();
     };
 
@@ -153,7 +169,7 @@ export default function NewWallet({ navigation }) {
                 <Body>
                     <BodyHeader>
                         <BodyHeaderText>
-                            니모닉을 안전한 곳에 저장하세요.
+                            개인 키를 안전한 곳에 저장하세요.
                         </BodyHeaderText>
                     </BodyHeader>
                     <MnemonicWrapper>
@@ -162,7 +178,7 @@ export default function NewWallet({ navigation }) {
                             <TextInput
                                 multiline
                                 variant="outlined"
-                                defaultValue={user.mne}
+                                defaultValue={priv}
                                 editable={false}
                             />
                         </MnemonicCon>
@@ -170,7 +186,7 @@ export default function NewWallet({ navigation }) {
                     <UserWrapper>
                         <PwRapper>
                             <TextInput
-                                label="닉네임"
+                                label={value.nick ? null : "닉네임"}
                                 variant="outlined"
                                 onChangeText={(text) =>
                                     setChangeValue({ ...value, nick: text })
@@ -179,7 +195,7 @@ export default function NewWallet({ navigation }) {
                         </PwRapper>
                         <IdWrppaer>
                             <TextInput
-                                label="비밀번호 입력"
+                                label={value.pw ? null : "비밀번호 입력"}
                                 variant="outlined"
                                 onChangeText={(text) =>
                                     setChangeValue({ ...value, pw: text })
@@ -194,13 +210,13 @@ export default function NewWallet({ navigation }) {
                             ></TextInput>
                         </IdWrppaer>
                     </UserWrapper>
-
-                    <NextWrapper>
-                        <NextButton onPress={() => completeForm()}>
-                            <Text>완료</Text>
-                        </NextButton>
-                    </NextWrapper>
                 </Body>
+
+                <NextWrapper>
+                    <NextButton onPress={() => completeForm()}>
+                        <NextButtonText>완료</NextButtonText>
+                    </NextButton>
+                </NextWrapper>
             </ContentWrapper>
         </Wrapper>
     );

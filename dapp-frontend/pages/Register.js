@@ -65,7 +65,7 @@ export default function Register({ navigation }) {
             <WrapperContent>
                 <LogoWrapper>
                     <Fontisto name="google-wallet" size={100} color="black" />
-                    <LogoText>Wallet</LogoText>
+                    <LogoText>CONNECTING</LogoText>
                 </LogoWrapper>
                 <ButtonWrapper>
                     <DivButton
@@ -87,8 +87,3 @@ export default function Register({ navigation }) {
         </Wrapper>
     );
 }
-const inputStyle = StyleSheet.create({
-    input: {
-        backgroundColor: "white",
-    },
-});

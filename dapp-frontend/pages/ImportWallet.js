@@ -11,6 +11,7 @@ import "react-native-get-random-values";
 import "@ethersproject/shims";
 import { ethers } from "ethers";
 import { aes256Encrypt, md5Encrypt, ojbToString } from "../utils/wallet";
+import "react-native-get-random-values";
 
 const LogoText = styled.Text`
     color: #000000;
@@ -70,6 +71,7 @@ const UserInfoText = styled.Text`
 `;
 
 const NextWrapper = styled.View`
+    margin-top: 10%;
     width: 90%;
     height: 10%;
     display: flex;
@@ -77,7 +79,7 @@ const NextWrapper = styled.View`
     align-items: center;
 `;
 const NextButton = styled.TouchableOpacity`
-    width: 80%;
+    width: 70%;
     height: 90%;
     background-color: #5e72e4;
     display: flex;
@@ -90,11 +92,13 @@ const NextButton = styled.TouchableOpacity`
 
 const ButtonText = styled.Text`
     color: #ffffff;
+    font-size: 18px;
+    font-weight: bold;
 `;
 
 export default function ImportWallet({ navigation }) {
     const [value, onChangeText] = useState("");
-    const { realm, changePassword, password } = useDB();
+    const { realm, changePassword, password, web3 } = useDB();
     const [form, setForm] = useState({});
     const [pwHelp, setPwHelp] = useState(false);
 
@@ -111,16 +115,14 @@ export default function ImportWallet({ navigation }) {
             Alert.alert("무효한 니모닉", "니모닉 코드를 확인하세요");
             return;
         }
-
-        const wallet = ethers.Wallet.fromMnemonic(form.mne);
-
+        const wallet = ethers.Wallet.fromMnemonic(mnes);
+        const priv = wallet.privateKey;
+        let enc = web3.eth.accounts.encrypt(priv, form.pw);
         realm.write(() => {
             realm.create(TableName, {
                 _id: Date.now(),
                 nickName: form.nick,
-                secureKey: ojbToString(
-                    aes256Encrypt(wallet.privateKey, form.pw)
-                ),
+                secureKey: ojbToString(enc),
                 pwMD5: ojbToString(md5Encrypt(form.pw)),
                 address: wallet.address,
             });
@@ -135,7 +137,7 @@ export default function ImportWallet({ navigation }) {
             <ContentWrapper>
                 <Header>
                     <Fontisto name="google-wallet" size={50} color="black" />
-                    <LogoText>Wallet</LogoText>
+                    <LogoText>CONNECTING</LogoText>
                 </Header>
                 <Body>
                     <BodyHeader>
@@ -144,7 +146,7 @@ export default function ImportWallet({ navigation }) {
                     <BodyContent>
                         <SafeAreaView>
                             <Ti
-                                value={value}
+                                value={form.mne}
                                 onChangeText={(txt) =>
                                     setForm({ ...form, mne: txt })
                                 }
@@ -159,7 +161,7 @@ export default function ImportWallet({ navigation }) {
                             <Stack style={{ width: 300 }}>
                                 <TextInput
                                     variant="outlined"
-                                    label="nickname"
+                                    label={form.nick ? null : "nickname"}
                                     style={{ width: 300, padding: 10 }}
                                     onChangeText={(txt) =>
                                         setForm({ ...form, nick: txt })
@@ -170,7 +172,7 @@ export default function ImportWallet({ navigation }) {
                                         setForm({ ...form, pw: txt })
                                     }
                                     variant="outlined"
-                                    label="password"
+                                    label={form.pw ? null : "password"}
                                     style={{ width: 300, padding: 10 }}
                                     helperText={
                                         pwHelp ? (
@@ -183,17 +185,11 @@ export default function ImportWallet({ navigation }) {
                             </Stack>
                         </UserInfoHeader>
                     </BodyContent>
-                    <Button
-                        onPress={() => completeForm()}
-                        title="완료"
-                        style={{
-                            alignSelf: "center",
-                            marginTop: 40,
-                            height: 50,
-                            width: 100,
-                        }}
-                        color="#5e72e4"
-                    />
+                    <NextWrapper>
+                        <NextButton onPress={() => completeForm()}>
+                            <ButtonText>생성</ButtonText>
+                        </NextButton>
+                    </NextWrapper>
                 </Body>
             </ContentWrapper>
         </Wrapper>

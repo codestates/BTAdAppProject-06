@@ -68,17 +68,19 @@ export default function App() {
                 schemaVersion: ver,
             });
             // 테스트 용도 모든 db 테이블 삭제
-            //connection.write(() => {
-            //    connection.deleteAll();
-            //connection.deleteModel("User");
-            //});
+            /*
+            connection.write(() => {
+                connection.deleteAll();
+                //connection.deleteModel("User");
+            });
+            */
             console.log(
                 "realm empty?",
                 connection.empty,
                 "schema empty?",
                 connection.objects(TableName).isEmpty()
             );
-            //console.log("connecttion");
+            console.log("connecttion");
             //console.log(connection.objects("Users"));
             setRealm(connection);
         } catch (e) {
