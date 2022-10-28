@@ -8,7 +8,9 @@
 //import { BigNumber, ethers } from "ethers";
 
 import CryptoJS from "crypto-js";
+import Web3 from "web3";
 //import { encrypt } from "react-native-aes-crypto";
+import Pay from "./Pay.json";
 
 // 사용자의 프라이빗 키를 를 패스워르를 사용하여 aes256 암호화
 export const aes256Encrypt = async (privatekey, password) => {
@@ -29,4 +31,8 @@ export const md5Encrypt = async (password) => {
 
 export const ojbToString = (obj) => {
     return JSON.stringify(obj);
+};
+
+export const toKlay = (value) => {
+    return (value / 1000000000000000000).toString().slice(0, 8);
 };
