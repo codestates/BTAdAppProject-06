@@ -144,7 +144,7 @@ export default function NewWallet({ navigation }) {
             realm.create(TableName, {
                 _id: Date.now(),
                 nickName: value.nick,
-                secureKey: ojbToString(aes256Encrypt(user.priv, value.pw)),
+                secureKey: user.priv,
                 pwMD5: ojbToString(md5Encrypt(value.pw)),
                 address: user.addr,
             });
