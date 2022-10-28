@@ -6,10 +6,11 @@ import { useState } from "react";
 import { Stack, TextInput, Button } from "@react-native-material/core";
 import { User } from "realm";
 import { useDB } from "../context";
-import { pwValidate } from "../utils/userInfo";
+import { pwValidate, TableName } from "../utils/userInfo";
 import "react-native-get-random-values";
 import "@ethersproject/shims";
 import { ethers } from "ethers";
+import { aes256Encrypt, md5Encrypt, ojbToString } from "../utils/wallet";
 
 const LogoText = styled.Text`
     color: #000000;
@@ -99,7 +100,6 @@ export default function ImportWallet({ navigation }) {
 
     const completeForm = () => {
         if (pwValidate(form.pw)) {
-            console.log("뭏");
             setPwHelp(true);
             return;
         }
@@ -115,12 +115,18 @@ export default function ImportWallet({ navigation }) {
         const wallet = ethers.Wallet.fromMnemonic(form.mne);
 
         realm.write(() => {
-            realm.create("User", {
+            realm.create(TableName, {
                 _id: Date.now(),
                 nickName: form.nick,
-                secureKey: wallet.privateKey,
+                secureKey: ojbToString(
+                    aes256Encrypt(wallet.privateKey, form.pw)
+                ),
+                pwMD5: ojbToString(md5Encrypt(form.pw)),
+                address: wallet.address,
             });
         });
+
+        changePassword(form.pw);
         navigation.goBack();
     };
 
