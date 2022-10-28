@@ -17,7 +17,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ScanQR from "./pages/ScanQR";
 import Payment from "./pages/Payment";
 import Web3 from "web3";
-import PayAbi from "./utils/Pay.json";
+import Pay from "./utils/Pay.json";
 
 /*
 const Wrapper = styled.View`
@@ -51,8 +51,12 @@ export default function App() {
     const [password, setPassword] = useState();
     const [won, setWon] = useState();
     const [pay, setPay] = useState({});
+
     let web3 = new Web3("https://api.baobab.klaytn.net:8651");
-    let contract = new web3.eth.Contract(PayAbi);
+    //let contract = new web3.eth.Contract(Pay);
+    //let web3 = new Web3("https://api.baobab.klaytn.net:8651");
+    //console.log(Pay);
+    let contract = new web3.eth.Contract(Pay.abi, Pay.deployedAddress);
 
     const changePassword = (pw) => {
         setPassword(pw);
