@@ -10,8 +10,9 @@ import Password from "./pages/Password";
 import { Text, View } from "react-native";
 import Register from "./pages/Register";
 import RegisterStackScreen from "./Navigation";
-
 import { decode, encode } from "base-64";
+import ScanQR from "./pages/ScanQR";
+import MakePayment from "./pages/MakePayment";
 
 /*
 const Wrapper = styled.View`
@@ -103,6 +104,8 @@ export default function App() {
                             <>
                                 <Stack.Screen name="Home" component={Home} />
                                 <Stack.Screen name="User" component={Home} />
+                                <Stack.Screen name="ScanQR" component={ScanQR} />
+                                <Stack.Screen name="MakePayment" component={MakePayment} />
                             </>
                         ) : (
                             <Stack.Screen

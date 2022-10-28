@@ -13,7 +13,7 @@ const Wrapper = styled.View`
     align-items: center;
 `;
 
-export default function ScanQR({ navigation }) {
+export default function ScanQR({ route, navigation }) {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
     const [uuid, setUuid] = useState('');
@@ -26,11 +26,22 @@ export default function ScanQR({ navigation }) {
   
       getBarCodeScannerPermissions();
     }, []);
+
+    useEffect(() => {
+      const { redirectTo } = route.params;
+      if(!redirectTo) {
+        alert(`Invalid Access`);
+      }
+    }, [route]);
   
     const handleCodeScanned = ({ type, data }) => {
       setScanned(true);
       setUuid(data);
       alert(`UUID : ${data}`);
+      const { redirectTo } = route.params;
+      navigation.navigate(redirectTo, {
+        uuid: data,
+      });
     };
   
     if (hasPermission === null) {

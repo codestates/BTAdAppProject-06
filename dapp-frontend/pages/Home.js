@@ -125,7 +125,15 @@ export default function Home({ navigation }) {
                         </MainContentBody>
                         <MainContentButtonWrapper>
                             <StyledButton color="#000000" title="송금하기" />
-                            <StyledButton color="#000000" title="QR 스캔" />
+                            <StyledButton
+                                color="#000000"
+                                title="QR 스캔"
+                                onPress={() => {
+                                    navigation.navigate("ScanQR", {
+                                        redirectTo: 'MakePayment'
+                                    });
+                                }}
+                            />
                             <StyledButton color="#000000" title="결제 내역" />
                         </MainContentButtonWrapper>
                     </MainContent>
