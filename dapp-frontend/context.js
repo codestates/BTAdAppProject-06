@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import Web3 from "web3";
+//import Web3 from "web3";
 //import Pay from "./utils/Pay.json";
 
 // provider

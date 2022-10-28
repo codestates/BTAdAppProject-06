@@ -1,4 +1,3 @@
-import { Text, View } from "react-native";
 import { useDB } from "../context";
 import { KeycodeInput } from "react-native-keycode";
 import styled from "styled-components/native";
@@ -12,8 +11,8 @@ const Wrapper = styled.View`
     justify-content: center;
     align-items: center;
 `;
-export default function Password({ navigation }) {
-    const { realm, changePassword, password } = useDB();
+export default function Password() {
+    const { realm, changePassword } = useDB();
     const completeForm = (pw) => {
         const userinfo = realm.objects(TableName);
         const objUser = userinfo[0];

@@ -119,12 +119,10 @@ const ReloadButton = styled.TouchableOpacity``;
 export default function Payment({ navigation }) {
     const [payDoc, setPayDoc] = useState({ klayPrice: 0 });
     const { realm, won, changePay, web3, contract } = useDB();
-    const [addr, setAddr] = useState();
-    //console.log(address);
+    //const [addr, setAddr] = useState();
     const [fee, setFee] = useState(1);
     const getFee = () => {
         let value = web3.utils.toWei(payDoc.klayPrice.toString(), "ether");
-        //console.log("helo");
         contract.methods
             .createPayment(payDoc.uuid, value)
             .estimateGas({
@@ -133,8 +131,6 @@ export default function Payment({ navigation }) {
             .then((gas) => {
                 setFee(gas);
             });
-        //console.log(get);
-        //etFee(get);
     };
 
     const createPayment = () => {

@@ -60,16 +60,6 @@ const MnemonicWrapper = styled.View`
     align-items: center;
 `;
 
-const MainContent = styled.View`
-    height: 90%;
-    width: 90%;
-    border-radius: 10px;
-    border-width: 1px;
-    border-color: #000000;
-    display: flex;
-    flex-direction: row;
-`;
-
 const UserWrapper = styled.View`
     height: 50%;
     width: 100%;
