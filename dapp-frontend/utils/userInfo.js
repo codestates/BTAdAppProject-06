@@ -13,3 +13,8 @@ export const pwValidate = (pw) => {
     }
     return false;
 };
+export const afterMinute = (m) => {
+    var tDate = new Date(Date.now());
+    tDate.setMinutes(tDate.getMinutes() + m);
+    return tDate.toISOString();
+};

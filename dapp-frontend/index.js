@@ -2,7 +2,7 @@ import { registerRootComponent } from "expo";
 
 import App from "./App";
 import { decode, encode } from "base-64";
-
+import { Provider as PaperProvider } from "react-native-paper";
 if (!global.btoa) {
     global.btoa = encode;
 }

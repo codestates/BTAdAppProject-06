@@ -115,21 +115,26 @@ const AddressText = styled.Text`
 `;
 
 export default function Home({ navigation }) {
-    const { realm, changePassword, password } = useDB();
+    const { realm, changeWonExchange } = useDB();
     const [address, setAddr] = useState();
     const {
         data: price,
         isLoading,
         error,
     } = useQuery(["coin"], coinsApi.getKlayPriceKrw);
-    console.log(price);
+    //console.log(price);
     useEffect(() => {
         const userInfo = realm.objects(TableName)[0];
         //const price = coinsApi.getKlayPriceKrw();
         console.log(userInfo);
-
         setAddr(userInfo.address);
     }, []);
+
+    useEffect(() => {
+        if (!isLoading) {
+            changeWonExchange(price["klay-token"]["krw"]);
+        }
+    }, [price]);
     return (
         <Wrapper>
             <ContentWrapper>
@@ -159,10 +164,18 @@ export default function Home({ navigation }) {
                             <DivButton color="#5e72e4">
                                 <MainButtonText>송금하기</MainButtonText>
                             </DivButton>
-                            <DivButton color="#5e72e4">
-                                <MainButtonText>송금받기</MainButtonText>
+                            <DivButton
+                                color="#6e72e4"
+                                onPress={() => navigation.push("Pay")}
+                            >
+                                <MainButtonText>
+                                    {isLoading ? "loading" : "결제생성"}
+                                </MainButtonText>
                             </DivButton>
-                            <DivButton color="#5e72e4">
+                            <DivButton
+                                color="#6e72e4"
+                                onPress={() => navigation.push("Scan")}
+                            >
                                 <MainButtonText>QR 스캔</MainButtonText>
                             </DivButton>
                         </MainContentButtonWrapper>
