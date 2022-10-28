@@ -7,7 +7,8 @@ import "@ethersproject/shims";
 import { ethers } from "ethers";
 import { Button, TextInput } from "@react-native-material/core";
 import { useDB } from "../context";
-import { pwValidate } from "../utils/userInfo";
+import { pwValidate, TableName } from "../utils/userInfo";
+import { aes256Encrypt, md5Encrypt, ojbToString } from "../utils/wallet";
 
 const LogoText = styled.Text`
     color: #000000;
@@ -136,13 +137,19 @@ export default function NewWallet({ navigation }) {
         }
         changePassword(value.pw);
         //console.log(realm.objects("User"));
+        //console.log(JSON.stringify(aes256Encrypt(user.priv, value.pw)));
+        console.log(md5Encrypt(value.pw));
+
         realm.write(() => {
-            realm.create("User", {
+            realm.create(TableName, {
                 _id: Date.now(),
                 nickName: value.nick,
-                secureKey: user.priv,
+                secureKey: ojbToString(aes256Encrypt(user.priv, value.pw)),
+                pwMD5: ojbToString(md5Encrypt(value.pw)),
+                address: user.addr,
             });
         });
+
         navigation.goBack();
     };
 

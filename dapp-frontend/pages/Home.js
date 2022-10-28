@@ -91,11 +91,13 @@ const MainContentButtonWrapper = styled.View`
     flex-direction: row;
     justify-content: center;
 `;
-const StyledButton = styled(Button)`
-    color: #000000;
+const DivButton = styled.TouchableOpacity`
+    background-color: #5e72e4;
     width: 33%;
-    border-radius: 1px solid #000000;
 `;
+//color: #000000;
+//width: 33%;
+//border-radius: 1px solid #000000;
 
 export default function Home({ navigation }) {
     const { realm, changePassword, password } = useDB();
@@ -105,7 +107,7 @@ export default function Home({ navigation }) {
             <ContentWrapper>
                 <AssetsWrapper>
                     <AssetsContent>
-                        <Text>코인</Text>
+                        <Text>코</Text>
                         <Text>환율</Text>
                     </AssetsContent>
                 </AssetsWrapper>
@@ -124,9 +126,11 @@ export default function Home({ navigation }) {
                             <Text>address</Text>
                         </MainContentBody>
                         <MainContentButtonWrapper>
-                            <StyledButton color="#000000" title="송금하기" />
-                            <StyledButton color="#000000" title="QR 스캔" />
-                            <StyledButton color="#000000" title="결제 내역" />
+                            <DivButton color="#5e72e4">
+                                <Text>송금하기</Text>
+                            </DivButton>
+                            <DivButton color="#000000" title="QR 스캔" />
+                            <DivButton color="#000000" title="결제 내역" />
                         </MainContentButtonWrapper>
                     </MainContent>
                 </MainContentWrapper>

@@ -12,6 +12,7 @@ import Register from "./pages/Register";
 import RegisterStackScreen from "./Navigation";
 
 import { decode, encode } from "base-64";
+import { TableName } from "./utils/userInfo";
 
 /*
 const Wrapper = styled.View`
@@ -23,12 +24,14 @@ justify-content: center;
 align-items: center;
 `*/
 
-const UserInfoSchema = {
-    name: "User",
+const UserSchema = {
+    name: TableName,
     properties: {
         _id: "int",
         nickName: "string",
         secureKey: "string",
+        pwMD5: "string",
+        address: "string",
     },
     primaryKey: "_id",
 };
@@ -48,26 +51,37 @@ export default function App() {
     async function prepare() {
         try {
             // 스키마 생성
+            const ver = await Realm.schemaVersion("dappDB");
             const connection = await Realm.open({
                 path: "dappDB",
-                schema: [UserInfoSchema],
+                schema: [UserSchema],
+                schemaVersion: ver,
             });
-            // 테스트 용도 모든 db 테이블 삭제
-            connection.write(() => {
-                connection.deleteAll();
-            });
+            //connection.write(() => {
+            //    connection.deleteAll();
 
-            console.log(connection.objects("User"));
+            //connection.deleteModel("User");
+            //});
+            console.log(
+                connection.empty,
+                "empy?",
+                connection.objects(TableName).isEmpty()
+            );
+            //console.log("connecttion");
+
+            // 테스트 용도 모든 db 테이블 삭제
+
+            //console.log(connection.objects("Users"));
             setRealm(connection);
         } catch (e) {
-            console.error(e);
+            console.error(e, "err?");
         } finally {
             setAppIsReady(true);
         }
     }
 
     const onLayoutRootView = useCallback(async () => {
-        if (appIsReady) {
+        if (appIsReady && realm) {
             // This tells the splash screen to hide immediately! If we call this after
             // `setAppIsReady`, then we may see a blank screen while the app is
             // loading its initial state and rendering its first pixels. So instead,
@@ -94,7 +108,7 @@ export default function App() {
                             presentation: "modal",
                         }}
                     >
-                        {realm.objects("User").length < 1 ? (
+                        {realm.objects(TableName).isEmpty() ? (
                             <Stack.Screen
                                 name="Register"
                                 component={RegisterStackScreen}
