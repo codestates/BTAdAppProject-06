@@ -13,6 +13,7 @@ import RegisterStackScreen from "./Navigation";
 
 import { decode, encode } from "base-64";
 import { TableName } from "./utils/userInfo";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 /*
 const Wrapper = styled.View`
@@ -38,6 +39,7 @@ const UserSchema = {
 
 SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
+const queryClient = new QueryClient();
 
 export default function App() {
     const [appIsReady, setAppIsReady] = useState();
@@ -101,31 +103,39 @@ export default function App() {
                 onLayout={onLayoutRootView}
                 style={{ width: "100%", height: "100%" }}
             >
-                <NavigationContainer>
-                    <Stack.Navigator
-                        screenOptions={{
-                            headerShown: false,
-                            presentation: "modal",
-                        }}
-                    >
-                        {realm.objects(TableName).isEmpty() ? (
-                            <Stack.Screen
-                                name="Register"
-                                component={RegisterStackScreen}
-                            />
-                        ) : password ? (
-                            <>
-                                <Stack.Screen name="Home" component={Home} />
-                                <Stack.Screen name="User" component={Home} />
-                            </>
-                        ) : (
-                            <Stack.Screen
-                                name="Password"
-                                component={Password}
-                            />
-                        )}
-                    </Stack.Navigator>
-                </NavigationContainer>
+                <QueryClientProvider client={queryClient}>
+                    <NavigationContainer>
+                        <Stack.Navigator
+                            screenOptions={{
+                                headerShown: false,
+                                presentation: "modal",
+                            }}
+                        >
+                            {realm.objects(TableName).isEmpty() ? (
+                                <Stack.Screen
+                                    name="Register"
+                                    component={RegisterStackScreen}
+                                />
+                            ) : password ? (
+                                <>
+                                    <Stack.Screen
+                                        name="Home"
+                                        component={Home}
+                                    />
+                                    <Stack.Screen
+                                        name="User"
+                                        component={Home}
+                                    />
+                                </>
+                            ) : (
+                                <Stack.Screen
+                                    name="Password"
+                                    component={Password}
+                                />
+                            )}
+                        </Stack.Navigator>
+                    </NavigationContainer>
+                </QueryClientProvider>
             </View>
         </DBContext.Provider>
     );
