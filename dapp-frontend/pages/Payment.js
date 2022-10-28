@@ -1,13 +1,18 @@
 import styled from "styled-components/native";
-import { ListItem, TextInput } from "@react-native-material/core";
+import {
+    ActivityIndicator,
+    ListItem,
+    TextInput,
+} from "@react-native-material/core";
 import { Ionicons } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import uuid from "react-native-uuid";
 import { useDB } from "../context";
 import { Alert, Text } from "react-native";
-import { ToastAndroid } from "react-native";
+//import { ToastAndroid } from "react-native";
 import { TableName } from "../utils/userInfo";
 //import { parse } from "react-native-svg";
+import * as SplashScreen from "expo-splash-screen";
 
 const Wrapper = styled.View`
     height: 100%;
@@ -116,11 +121,16 @@ const CreateButtonText = styled.Text`
 `;
 const ReloadButton = styled.TouchableOpacity``;
 
+// Keep the splash screen visible while we fetch resources
+SplashScreen.preventAutoHideAsync();
+
 export default function Payment({ navigation }) {
     const [payDoc, setPayDoc] = useState({ klayPrice: 0 });
     const { realm, won, changePay, web3, contract, password } = useDB();
+    ///const [isReady, setIsReady] = useState(false);
     //const [addr, setAddr] = useState();
     const [fee, setFee] = useState(1);
+
     const getFee = () => {
         let value = web3.utils.toWei(payDoc.klayPrice.toString(), "ether");
         contract.methods
@@ -138,17 +148,18 @@ export default function Payment({ navigation }) {
             return;
         }
         let value = web3.utils.toWei(payDoc.klayPrice.toString(), "ether");
+        console.log(value);
         contract.methods
             .createPayment(payDoc.uuid, value)
             .estimateGas({
                 from: payDoc.address,
             })
             .then((gas) => {
-                //console.log(payDoc);
+                console.log(payDoc);
                 contract.methods
                     .createPayment(payDoc.uuid, value)
                     .send({
-                        from: payDoc.address,
+                        from: "0x5386Bf90EaC5A5638B9Eb56F8Dd187c3B4848211",
                         gas: gas,
                     })
                     .then((receipt) => {
@@ -159,7 +170,7 @@ export default function Payment({ navigation }) {
                     })
                     .catch((err) => {
                         Alert.alert(err);
-                        console.error(err, "실패");
+                        console.error(err, "실패s");
                     });
             })
             .catch((err) => {
@@ -172,10 +183,19 @@ export default function Payment({ navigation }) {
         const info = realm.objects(TableName)[0];
         const encPriv = JSON.parse(info.secureKey);
         //console.log(encPriv);
-        let wallet = web3.eth.accounts.wallet.decrypt([encPriv], password);
-        wallet = wallet["0"];
-        //const priv = info.secureKey;
-        setPayDoc({ ...payDoc, uuid: uuid.v4(), address: wallet.address });
+        //console.log(encPriv);
+
+        let wallet = web3.eth.accounts.decrypt(encPriv, password);
+        // 필수적으로 해야함
+        web3.eth.accounts.wallet.add(wallet.privateKey);
+
+        console.log(wallet);
+
+        setPayDoc({
+            ...payDoc,
+            uuid: uuid.v4(),
+            address: wallet.address,
+        });
     }, []);
     const changePrice = (txt) => {
         const calPrice = parseInt(txt) / parseInt(won);

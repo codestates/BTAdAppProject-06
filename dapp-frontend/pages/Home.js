@@ -1,4 +1,4 @@
-import { Text } from "react-native";
+import { SafeAreaView, Text } from "react-native";
 import styled from "styled-components/native";
 import QRCode from "react-native-qrcode-svg";
 import { Fontisto } from "@expo/vector-icons";
@@ -9,6 +9,7 @@ import { TableName } from "../utils/userInfo";
 import { coinsApi } from "../utils/api";
 import { useQuery } from "@tanstack/react-query";
 import { toKlay } from "../utils/wallet";
+import { ActivityIndicator } from "@react-native-material/core";
 
 const Wrapper = styled.View`
     width: 100%;
@@ -97,7 +98,7 @@ const MainContentButtonWrapper = styled.View`
     justify-content: center;
 `;
 const DivButton = styled.TouchableOpacity`
-    background-color: #5e72e4;
+    background-color: #5e72e4
     width: 33%;
     display: flex;
     justify-content: center;
@@ -115,6 +116,8 @@ const AddressText = styled.Text`
     font-weight: bold;
 `;
 
+const start = async () => {};
+
 export default function Home({ navigation }) {
     const { realm, changeWonExchange, web3 } = useDB();
     const [address, setAddr] = useState();
@@ -125,6 +128,7 @@ export default function Home({ navigation }) {
         isLoading,
         error,
     } = useQuery(["coin"], coinsApi.getKlayPriceKrw);
+    const [loading, setLoading] = useState(false);
     //console.log(price);
     useEffect(() => {
         // get info of user from realmDB
@@ -137,6 +141,7 @@ export default function Home({ navigation }) {
             .then((res) => setBalance(toKlay(res)));
 
         setAddr(userInfo.address);
+        setLoading(false);
     }, []);
 
     useEffect(() => {
@@ -144,6 +149,7 @@ export default function Home({ navigation }) {
             changeWonExchange(price["klay-token"]["krw"]);
         }
     }, [price]);
+
     return (
         <Wrapper>
             <ContentWrapper>
@@ -187,10 +193,15 @@ export default function Home({ navigation }) {
                             </DivButton>
                             <DivButton
                                 color="#6e72e4"
-                                onPress={() => navigation.push("Pay")}
+                                onPress={() => {
+                                    navigation.navigate("Pay");
+                                }}
                             >
+                                {loading ? (
+                                    <ActivityIndicator color="blue" />
+                                ) : null}
                                 <MainButtonText>
-                                    {isLoading ? "loading" : "결제생성"}
+                                    {loading ? "loading" : "결제생성"}
                                 </MainButtonText>
                             </DivButton>
                             <DivButton

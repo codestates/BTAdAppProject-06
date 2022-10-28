@@ -137,6 +137,9 @@ export default function NewWallet({ navigation }) {
             return;
         }
         let enc = web3.eth.accounts.encrypt(priv, value.pw);
+        //let dnc = web3.eth.accounts.decrypt(JSON.parse(enc), value.pw);
+        //console.log(enc);
+        //console.log(dnc);
         //console.log(enc, "enc");
         //changePassword(value.pw);
         //console.log(realm.objects("User"));
@@ -146,7 +149,7 @@ export default function NewWallet({ navigation }) {
             realm.create(TableName, {
                 _id: Date.now(),
                 nickName: value.nick,
-                secureKey: JSON.stringify(enc),
+                secureKey: ojbToString(enc),
                 pwMD5: ojbToString(md5Encrypt(value.pw)),
                 address: user.addr,
             });
