@@ -9,11 +9,13 @@ import Home from "./pages/Home";
 import Password from "./pages/Password";
 import { Text, View } from "react-native";
 import Register from "./pages/Register";
-import RegisterStackScreen from "./Navigation";
+import { HomeStackScreen, RegisterStackScreen } from "./Navigation";
 
 import { decode, encode } from "base-64";
 import { TableName } from "./utils/userInfo";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import ScanQR from "./pages/ScanQR";
+import Payment from "./pages/Payment";
 
 /*
 const Wrapper = styled.View`
@@ -45,9 +47,17 @@ export default function App() {
     const [appIsReady, setAppIsReady] = useState();
     const [realm, setRealm] = useState(null);
     const [password, setPassword] = useState();
+    const [won, setWon] = useState();
+    const [pay, setPay] = useState({});
 
     const changePassword = (pw) => {
         setPassword(pw);
+    };
+    const changeWonExchange = (krw) => {
+        setWon(krw);
+    };
+    const changePay = (payDoc) => {
+        setPay(payDoc);
     };
 
     async function prepare() {
@@ -59,20 +69,18 @@ export default function App() {
                 schema: [UserSchema],
                 schemaVersion: ver,
             });
+            // 테스트 용도 모든 db 테이블 삭제
             //connection.write(() => {
             //    connection.deleteAll();
-
             //connection.deleteModel("User");
             //});
             console.log(
+                "realm empty?",
                 connection.empty,
-                "empy?",
+                "schema empty?",
                 connection.objects(TableName).isEmpty()
             );
             //console.log("connecttion");
-
-            // 테스트 용도 모든 db 테이블 삭제
-
             //console.log(connection.objects("Users"));
             setRealm(connection);
         } catch (e) {
@@ -98,7 +106,17 @@ export default function App() {
         return null;
     }
     return (
-        <DBContext.Provider value={{ realm, changePassword, password }}>
+        <DBContext.Provider
+            value={{
+                realm,
+                changePassword,
+                password,
+                changeWonExchange,
+                won,
+                changePay,
+                pay,
+            }}
+        >
             <View
                 onLayout={onLayoutRootView}
                 style={{ width: "100%", height: "100%" }}
@@ -119,12 +137,8 @@ export default function App() {
                             ) : password ? (
                                 <>
                                     <Stack.Screen
-                                        name="Home"
-                                        component={Home}
-                                    />
-                                    <Stack.Screen
-                                        name="User"
-                                        component={Home}
+                                        name="Main"
+                                        component={HomeStackScreen}
                                     />
                                 </>
                             ) : (
