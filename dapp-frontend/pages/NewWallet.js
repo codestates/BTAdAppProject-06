@@ -8,7 +8,8 @@ import { ethers } from "ethers";
 import { Button, TextInput } from "@react-native-material/core";
 import { useDB } from "../context";
 import { pwValidate, TableName } from "../utils/userInfo";
-import { aes256Encrypt, md5Encrypt, ojbToString } from "../utils/wallet";
+import { md5Encrypt, ojbToString } from "../utils/wallet";
+import "react-native-get-random-values";
 
 const LogoText = styled.Text`
     color: #000000;
@@ -104,7 +105,7 @@ const MnemonicCon = styled.View`
 export default function NewWallet({ navigation }) {
     const [value, setChangeValue] = useState({});
     const [user, setUser] = useState({});
-    const { realm, changePassword, password } = useDB();
+    const { realm, changePassword, password, web3 } = useDB();
     const [pwHelp, setPwHelp] = useState(false);
     //console.log("get realm", realm);
     useEffect(() => {

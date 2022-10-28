@@ -129,6 +129,7 @@ export default function Home({ navigation }) {
     useEffect(() => {
         // get info of user from realmDB
         const userInfo = realm.objects(TableName)[0];
+        console.log(userInfo);
 
         setNick(userInfo.nickName);
         // get user balance
