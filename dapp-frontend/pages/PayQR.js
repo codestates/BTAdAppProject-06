@@ -1,9 +1,9 @@
-import { useNavigation } from "@react-navigation/native";
+//mport { useNavigation } from "@react-navigation/native";
 import QRCode from "react-native-qrcode-svg";
 import styled from "styled-components/native";
-import { Fontisto } from "@expo/vector-icons";
+//import { Fontisto } from "@expo/vector-icons";
 import { useDB } from "../context";
-import { Text } from "react-native";
+//import { Text } from "react-native";
 import { useEffect, useState } from "react";
 import { afterMinute, TableName } from "../utils/userInfo";
 const Wrapper = styled.View`

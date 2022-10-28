@@ -4,7 +4,7 @@ import { Alert, StyleSheet, Text, TextInput as Ti } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
 import { Stack, TextInput, Button } from "@react-native-material/core";
-import { User } from "realm";
+//import { User } from "realm";
 import { useDB } from "../context";
 import { pwValidate, TableName } from "../utils/userInfo";
 import "react-native-get-random-values";

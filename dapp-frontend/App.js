@@ -1,33 +1,23 @@
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { StatusBar } from "expo-status-bar";
+//import { StatusBar } from "expo-status-bar";
 import React, { useCallback, useEffect, useState } from "react";
 import Realm from "realm";
 import * as SplashScreen from "expo-splash-screen";
 import { DBContext } from "./context";
-import Home from "./pages/Home";
+//import Home from "./pages/Home";
 import Password from "./pages/Password";
 import { Text, View } from "react-native";
-import Register from "./pages/Register";
+//import Register from "./pages/Register";
 import { HomeStackScreen, RegisterStackScreen } from "./Navigation";
 
-import { decode, encode } from "base-64";
+//import { decode, encode } from "base-64";
 import { TableName } from "./utils/userInfo";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import ScanQR from "./pages/ScanQR";
-import Payment from "./pages/Payment";
+//import ScanQR from "./pages/ScanQR";
+//import Payment from "./pages/Payment";
 import Web3 from "web3";
 import Pay from "./utils/Pay.json";
-
-/*
-const Wrapper = styled.View`
-width: 100%;
-height: 100%;
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-`*/
 
 const UserSchema = {
     name: TableName,

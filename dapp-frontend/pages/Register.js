@@ -1,10 +1,10 @@
 import {
-    Button,
+    //Button,
     StyleSheet,
-    Text,
-    TextInput,
+    //Text,
+    //TextInput,
     TouchableOpacity,
-    View,
+    //View,
 } from "react-native";
 import styled from "styled-components/native";
 import { Fontisto } from "@expo/vector-icons";
