@@ -118,7 +118,7 @@ const ReloadButton = styled.TouchableOpacity``;
 
 export default function Payment({ navigation }) {
     const [payDoc, setPayDoc] = useState({ klayPrice: 0 });
-    const { realm, won, changePay, web3, contract } = useDB();
+    const { realm, won, changePay, web3, contract, password } = useDB();
     //const [addr, setAddr] = useState();
     const [fee, setFee] = useState(1);
     const getFee = () => {
@@ -170,9 +170,11 @@ export default function Payment({ navigation }) {
 
     useEffect(() => {
         const info = realm.objects(TableName)[0];
-        const wallet = web3.eth.accounts.wallet.add(info.secureKey);
-        //console.log(wallet);
-        const priv = info.secureKey;
+        const encPriv = JSON.parse(info.secureKey);
+        //console.log(encPriv);
+        let wallet = web3.eth.accounts.wallet.decrypt([encPriv], password);
+        wallet = wallet["0"];
+        //const priv = info.secureKey;
         setPayDoc({ ...payDoc, uuid: uuid.v4(), address: wallet.address });
     }, []);
     const changePrice = (txt) => {
