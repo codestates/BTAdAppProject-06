@@ -1,5 +1,4 @@
 // 48 ~ 57, 0 ~ 9
-
 export const TableName = "User" + "11";
 export const pwValidate = (pw) => {
     if (!pw) {

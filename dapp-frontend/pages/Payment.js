@@ -4,6 +4,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import uuid from "react-native-uuid";
 import { useDB } from "../context";
+import { Alert, Text } from "react-native";
+import { ToastAndroid } from "react-native";
+import { TableName } from "../utils/userInfo";
 //import { parse } from "react-native-svg";
 
 const Wrapper = styled.View`
@@ -74,7 +77,15 @@ const BodyInputWrapper = styled.View`
     display: flex;
     justify-content: center;
 `;
-
+// here
+const BodyInputFeeWrapper = styled.View`
+    width: 60%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+`;
 const ContentFooter = styled.View`
     width: 100%;
     height: 15%;
@@ -103,13 +114,70 @@ const CreateButtonText = styled.Text`
     color: #ffffff;
     font-size: 18px;
 `;
+const ReloadButton = styled.TouchableOpacity``;
 
 export default function Payment({ navigation }) {
     const [payDoc, setPayDoc] = useState({ klayPrice: 0 });
-    const { won, changePay } = useDB();
+    const { realm, won, changePay, web3, contract } = useDB();
+    const [addr, setAddr] = useState();
+    //console.log(address);
+    const [fee, setFee] = useState(1);
+    const getFee = () => {
+        let value = web3.utils.toWei(payDoc.klayPrice.toString(), "ether");
+        //console.log("helo");
+        contract.methods
+            .createPayment(payDoc.uuid, value)
+            .estimateGas({
+                from: payDoc.address,
+            })
+            .then((gas) => {
+                setFee(gas);
+            });
+        //console.log(get);
+        //etFee(get);
+    };
+
+    const createPayment = () => {
+        if (!payDoc.uuid || !payDoc.klayPrice) {
+            return;
+        }
+        let value = web3.utils.toWei(payDoc.klayPrice.toString(), "ether");
+        contract.methods
+            .createPayment(payDoc.uuid, value)
+            .estimateGas({
+                from: payDoc.address,
+            })
+            .then((gas) => {
+                //console.log(payDoc);
+                contract.methods
+                    .createPayment(payDoc.uuid, value)
+                    .send({
+                        from: payDoc.address,
+                        gas: gas,
+                    })
+                    .then((receipt) => {
+                        //ToastAndroid("결제 생성 성공", receipt);
+                        console.log(receipt);
+                        changePay(payDoc);
+                        navigation.navigate("QRModal");
+                    })
+                    .catch((err) => {
+                        Alert.alert(err);
+                        console.error(err, "실패");
+                    });
+            })
+            .catch((err) => {
+                Alert.alert(err);
+                console.error("실패", err);
+            });
+    };
 
     useEffect(() => {
-        setPayDoc({ ...payDoc, uuid: uuid.v4() });
+        const info = realm.objects(TableName)[0];
+        const wallet = web3.eth.accounts.wallet.add(info.secureKey);
+        //console.log(wallet);
+        const priv = info.secureKey;
+        setPayDoc({ ...payDoc, uuid: uuid.v4(), address: wallet.address });
     }, []);
     const changePrice = (txt) => {
         const calPrice = parseInt(txt) / parseInt(won);
@@ -118,13 +186,7 @@ export default function Payment({ navigation }) {
             klayPrice: calPrice,
         });
     };
-    const completeForm = () => {
-        if (!payDoc.uuid || !payDoc.klayPrice) {
-            return;
-        }
-        changePay(payDoc);
-        navigation.navigate("QRModal");
-    };
+
     return (
         <Wrapper>
             <ContentWrapper>
@@ -169,14 +231,22 @@ export default function Payment({ navigation }) {
                                 예상 수수료
                             </BodyContentHeaderText>
                         </BodyContentHeader>
-                        <BodyInputWrapper>
-                            <ListItem title="1 klay" />
-                        </BodyInputWrapper>
+                        <BodyInputFeeWrapper>
+                            <Text>{""}</Text>
+                            <Text>{fee !== 1 ? `${fee} gas` : "1 klay"}</Text>
+                            <ReloadButton onPress={() => getFee()}>
+                                <Ionicons
+                                    name="reload"
+                                    size={24}
+                                    color="black"
+                                />
+                            </ReloadButton>
+                        </BodyInputFeeWrapper>
                     </BodyContentWrapper>
                 </BodyWrapper>
                 <ContentFooter>
                     <ButtonWrapper>
-                        <CreatePayButton onPress={() => completeForm()}>
+                        <CreatePayButton onPress={() => createPayment()}>
                             <CreateButtonText>결제 생성</CreateButtonText>
                         </CreatePayButton>
                     </ButtonWrapper>

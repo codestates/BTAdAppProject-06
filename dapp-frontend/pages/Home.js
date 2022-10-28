@@ -8,6 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 import { TableName } from "../utils/userInfo";
 import { coinsApi } from "../utils/api";
 import { useQuery } from "@tanstack/react-query";
+import { toKlay } from "../utils/wallet";
 
 const Wrapper = styled.View`
     width: 100%;
@@ -115,8 +116,9 @@ const AddressText = styled.Text`
 `;
 
 export default function Home({ navigation }) {
-    const { realm, changeWonExchange } = useDB();
+    const { realm, changeWonExchange, web3 } = useDB();
     const [address, setAddr] = useState();
+    const [balance, setBalance] = useState(0);
     const {
         data: price,
         isLoading,
@@ -125,8 +127,16 @@ export default function Home({ navigation }) {
     //console.log(price);
     useEffect(() => {
         const userInfo = realm.objects(TableName)[0];
-        //const price = coinsApi.getKlayPriceKrw();
-        console.log(userInfo);
+        //const price = coinsApigetKlayPriceKrw();
+        //console.log(userInfo.secureKey);
+        const wallet = web3.eth.accounts.wallet.add(userInfo.secureKey);
+        console.log(wallet);
+
+        web3.eth
+            .getBalance(userInfo.address)
+            .then((res) => setBalance(toKlay(res)));
+        //console.log(balance);
+        //console.log(balance);
         setAddr(userInfo.address);
     }, []);
 
@@ -140,9 +150,18 @@ export default function Home({ navigation }) {
             <ContentWrapper>
                 <AssetsWrapper>
                     <AssetsContent>
-                        <Text>klay</Text>
+                        <Text>{balance} klay</Text>
                         <Text>
-                            환율 {isLoading ? null : price["klay-token"]["krw"]}
+                            {" "}
+                            {isLoading
+                                ? null
+                                : `1 klay 당 ${price["klay-token"]["krw"]}원` +
+                                  "  => " +
+                                  balance *
+                                      parseInt(
+                                          price["klay-token"]["krw"]
+                                      ).toString() +
+                                  " 원"}
                         </Text>
                     </AssetsContent>
                 </AssetsWrapper>
