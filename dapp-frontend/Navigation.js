@@ -15,6 +15,7 @@ import { useCallback } from "react";
 import { View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import * as SplashScreen from "expo-splash-screen";
+import Send from "./pages/Send";
 
 const RootStack = createNativeStackNavigator();
 export function RootStackScreen() {
@@ -60,7 +61,7 @@ export function RootStackScreen() {
                 </RootStack.Navigator>
             </NavigationContainer>
         </View>
-    )
+    );
 }
 
 const RegisterStack = createNativeStackNavigator();
@@ -87,6 +88,7 @@ export function HomeStackScreen() {
             <HomeStack.Screen name="Scan" component={ScanQR} />
             <HomeStack.Screen name="CreatePayment" component={CreatePayment} />
             <HomeStack.Screen name="MakePayment" component={MakePayment} />
+            <HomeStack.Screen name="Send" component={Send} />
             <HomeStack.Group screenOptions={{ presentation: "modal" }}>
                 <HomeStack.Screen name="QRModal" component={PayQR} />
             </HomeStack.Group>

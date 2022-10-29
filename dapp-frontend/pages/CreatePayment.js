@@ -134,6 +134,8 @@ export default function CreatePayment({ navigation }) {
 
     const getFee = () => {
         let value = web3.utils.toWei(payDoc.klayPrice.toString(), "ether");
+
+        const contract = getPayContract(web3);
         contract.methods
             .createPayment(payDoc.uuid, value)
             .estimateGas({
@@ -150,7 +152,7 @@ export default function CreatePayment({ navigation }) {
         }
         let value = web3.utils.toWei(payDoc.klayPrice.toString(), "ether");
         console.log(value, account);
-        console.log(web3.eth.accounts.wallet[0])
+        console.log(web3.eth.accounts.wallet[0]);
         const contract = getPayContract(web3);
         try {
             const estimatedGas = await contract.methods
@@ -223,8 +225,8 @@ export default function CreatePayment({ navigation }) {
                                         : null
                                 }
                                 onChangeText={(txt) => changePrice(txt)}
+                                helperText={`${payDoc["klayPrice"]} klay`}
                             ></TextInput>
-                            <ListItem title={`${payDoc["klayPrice"]} klay`} />
                         </BodyInputWrapper>
                     </BodyContentWrapper>
                     <BodyContentWrapper>

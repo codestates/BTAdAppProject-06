@@ -93,7 +93,7 @@ const MainContentButtonWrapper = styled.View`
     justify-content: center;
 `;
 const DivButton = styled.TouchableOpacity`
-    background-color: #5e72e4
+    background-color: #5e72e4;
     width: 33%;
     display: flex;
     justify-content: center;
@@ -111,10 +111,10 @@ const AddressText = styled.Text`
     font-weight: bold;
 `;
 
-const start = async () => { };
+const start = async () => {};
 
 export default function Home({ navigation }) {
-    const {account, balance, nickName, klayToKrw} = useWallet();
+    const { account, balance, nickName, klayToKrw } = useWallet();
 
     return (
         <Wrapper>
@@ -125,10 +125,7 @@ export default function Home({ navigation }) {
                         <Text>
                             {`1 klay 당 ${klayToKrw}원` +
                                 "  => " +
-                                balance *
-                                parseInt(
-                                    klayToKrw
-                                ).toString() +
+                                balance * parseInt(klayToKrw).toString() +
                                 " 원"}
                         </Text>
                     </AssetsContent>
@@ -152,7 +149,10 @@ export default function Home({ navigation }) {
                             </AddressText>
                         </MainContentBody>
                         <MainContentButtonWrapper>
-                            <DivButton color="#5e72e4">
+                            <DivButton
+                                color="#5e72e4"
+                                onPress={() => navigation.navigate("Send")}
+                            >
                                 <MainButtonText>송금하기</MainButtonText>
                             </DivButton>
                             <DivButton
@@ -170,9 +170,11 @@ export default function Home({ navigation }) {
                             </DivButton>
                             <DivButton
                                 color="#6e72e4"
-                                onPress={() => navigation.push("Scan", {
-                                    redirectTo: 'MakePayment'
-                                })}
+                                onPress={() =>
+                                    navigation.push("Scan", {
+                                        redirectTo: "MakePayment",
+                                    })
+                                }
                             >
                                 <MainButtonText>QR 스캔</MainButtonText>
                             </DivButton>
