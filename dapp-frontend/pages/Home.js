@@ -1,10 +1,11 @@
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 import styled from "styled-components/native";
 import QRCode from "react-native-qrcode-svg";
 import { Fontisto } from "@expo/vector-icons";
 import { useEffect } from "react";
 import { ActivityIndicator } from "@react-native-material/core";
 import { useWallet } from "../providers/WalletProvider";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const Wrapper = styled.View`
     width: 100%;
@@ -25,23 +26,28 @@ const ContentWrapper = styled.View`
 `;
 
 const AssetsWrapper = styled.View`
-    height: 20%;
+    height: 25%;
     width: 100%;
     background-color: #ffffff;
     border-radius: 5px;
-    display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
 `;
 
 const AssetsContent = styled.View`
-    width: 95%;
+    width: 90%;
     height: 90%;
     display: flex;
     justify-content: center;
     align-items: center;
 `;
+const AssetsContentRoad = styled.View`
+    width: 10%;
+    height: 90%;
+    align-items: center;
+`;
+const LoadTouch = styled.TouchableOpacity``;
 
 const MainContentWrapper = styled.View`
     height: 70%;
@@ -68,6 +74,10 @@ const MainContentHeader = styled.View`
     border-color: #4f4f4f;
     border-bottom-width: 1px;
     border-style: solid;
+    justify-content: space-between;
+`;
+const MainContentHeaderLeft = styled.View`
+    flex-direction: row;
 `;
 
 const MainHeaderContentName = styled.Text`
@@ -112,7 +122,8 @@ const AddressText = styled.Text`
 `;
 
 export default function Home({ navigation }) {
-    const { account, balance, nickName, klayToKrw } = useWallet();
+    const { account, balance, nickName, klayToKrw, loadBalance } = useWallet();
+    console.log(account);
 
     return (
         <Wrapper>
@@ -127,18 +138,36 @@ export default function Home({ navigation }) {
                                 " 원"}
                         </Text>
                     </AssetsContent>
+                    <AssetsContentRoad>
+                        <LoadTouch onPress={() => loadBalance()}>
+                            <MaterialIcons
+                                name="history-edu"
+                                size={24}
+                                color="black"
+                            />
+                        </LoadTouch>
+                    </AssetsContentRoad>
                 </AssetsWrapper>
                 <MainContentWrapper>
                     <MainContent>
                         <MainContentHeader>
-                            <Fontisto
-                                name="google-wallet"
-                                size={24}
-                                color="black"
-                            />
-                            <MainHeaderContentName>
-                                CONNECTING
-                            </MainHeaderContentName>
+                            <MainContentHeaderLeft>
+                                <Fontisto
+                                    name="google-wallet"
+                                    size={24}
+                                    color="black"
+                                />
+                                <MainHeaderContentName>
+                                    CONNECTING
+                                </MainHeaderContentName>
+                            </MainContentHeaderLeft>
+                            <LoadTouch>
+                                <Octicons
+                                    name="history"
+                                    size={24}
+                                    color="black"
+                                />
+                            </LoadTouch>
                         </MainContentHeader>
                         <MainContentBody>
                             <QRCode value={account} />
