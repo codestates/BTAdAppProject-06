@@ -16,6 +16,7 @@ import { View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import * as SplashScreen from "expo-splash-screen";
 import Send from "./pages/Send";
+import SendComplete from "./pages/SendComplete";
 
 const RootStack = createNativeStackNavigator();
 export function RootStackScreen() {
@@ -91,6 +92,7 @@ export function HomeStackScreen() {
             <HomeStack.Screen name="Send" component={Send} />
             <HomeStack.Group screenOptions={{ presentation: "modal" }}>
                 <HomeStack.Screen name="QRModal" component={PayQR} />
+                <HomeStack.Screen name="SendModal" component={SendComplete} />
             </HomeStack.Group>
         </HomeStack.Navigator>
     );

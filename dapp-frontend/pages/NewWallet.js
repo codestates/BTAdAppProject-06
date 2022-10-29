@@ -7,6 +7,7 @@ import { pwValidate, TableName } from "../utils/userInfo";
 import { md5Encrypt, ojbToString } from "../utils/wallet";
 import { useWallet } from "../providers/WalletProvider";
 import { useRealm } from "../providers/RealmProvider";
+import * as Clipboard from "expo-clipboard";
 
 const LogoText = styled.Text`
     color: #000000;
@@ -105,18 +106,17 @@ const MnemonicCon = styled.View`
 
 export default function NewWallet({ navigation }) {
     const [value, setChangeValue] = useState({});
-    const {web3} = useWallet();
+    const { web3 } = useWallet();
     const realm = useRealm();
     const [pwHelp, setPwHelp] = useState(false);
     const [wallet, setWallet] = useState();
 
     useEffect(() => {
-        const wallet = web3.eth.accounts.create(Math.random() * 1000 + '');
+        const wallet = web3.eth.accounts.create(Math.random() * 1000 + "");
         setWallet(wallet);
     }, []);
 
     const completeForm = () => {
-
         if (pwValidate(value.pw)) {
             setPwHelp(true);
             return;
