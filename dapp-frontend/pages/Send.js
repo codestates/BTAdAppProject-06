@@ -9,7 +9,7 @@ import { useWallet } from "../providers/WalletProvider";
 import { useEffect, useState } from "react";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { intValidate } from "../utils/userInfo";
-import { Alert, ToastAndroid } from "react-native";
+import { Alert, ScrollView, ToastAndroid } from "react-native";
 
 const Wrapper = styled.View`
     width: 100%;
@@ -103,7 +103,6 @@ const ErrorText = styled.Text`
 `;
 
 export default function Send({ navigation }) {
-    navigation.navigate("SendModal", { klay: 10, receipt: "test" });
     const { web3, payContract, account, klayToKrw, balance, noti } =
         useWallet();
     const [klay, setKlay] = useState("0");
@@ -140,6 +139,7 @@ export default function Send({ navigation }) {
         }
 
         const value = web3.utils.toWei(sendKlay.toString(), "ether");
+
         web3.eth
             .sendTransaction({
                 from: account,
