@@ -151,8 +151,8 @@ export default function CreatePayment({ navigation }) {
             return;
         }
         let value = web3.utils.toWei(payDoc.klayPrice.toString(), "ether");
-        console.log(value, account);
-        console.log(web3.eth.accounts.wallet[0]);
+        //console.log(value, account);
+        //console.log(web3.eth.accounts.wallet[0]);
         const contract = getPayContract(web3);
         try {
             const estimatedGas = await contract.methods

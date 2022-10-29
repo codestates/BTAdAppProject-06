@@ -115,7 +115,7 @@ export default function Send({ navigation }) {
     //console.log(account);
     const changeSendKlay = (klay) => {
         if (!intValidate(klay)) {
-            console.log("false");
+            console.err("false");
             setSendKlay(parseInt(1));
             setFormError({ ...formError, klay: true });
             return;

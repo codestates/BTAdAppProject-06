@@ -19,7 +19,7 @@ export default function Password() {
     const completeForm = (pw) => {
         const userinfo = realm.objects(TableName);
         const objUser = userinfo[0];
-        console.log(objUser);
+        //console.log(objUser);
         const inputMD5 = md5Encrypt(pw)._z;
         const dbMD5 = JSON.parse(objUser["pwMD5"])._z;
         if (inputMD5 === dbMD5) {
