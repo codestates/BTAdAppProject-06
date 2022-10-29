@@ -94,7 +94,7 @@ export default function ScanQR({ route, navigation }) {
     const handleCodeScanned = ({ type, data }) => {
         setScanned(true);
         const params = JSON.parse(data);
-        console.log(params);
+        //console.log(params);
         const { redirectTo } = route.params;
         navigation.navigate(redirectTo, params);
     };

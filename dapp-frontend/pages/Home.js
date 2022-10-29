@@ -123,7 +123,7 @@ const AddressText = styled.Text`
 
 export default function Home({ navigation }) {
     const { account, balance, nickName, klayToKrw, loadBalance } = useWallet();
-    console.log(account);
+    //console.log(account);
 
     return (
         <Wrapper>

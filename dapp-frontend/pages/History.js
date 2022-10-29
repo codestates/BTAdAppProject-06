@@ -66,13 +66,13 @@ const ContentText = styled.Text`
 const Item = ({ item }) => {
     //console.log(item, "get ");
 
-    const { web3 } = useWallet();
+    //const { web3 } = useWallet();
     const getKlay = (v) => {
         if (!v) {
             return;
         }
         v = new BigNumber(v).dividedBy(1e18);
-        console.log(v.toString());
+        //console.log(v.toString());
         //console.log(klay);
         return v.toString();
     };

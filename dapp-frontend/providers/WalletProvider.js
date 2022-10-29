@@ -58,14 +58,14 @@ const WalletProvider = ({ children }) => {
     }, []);
 
     const loadTransaction = useCallback(async () => {
-        console.log("call");
+        //console.log("call");
 
         if (!account) {
             return null;
         }
         const data = await coinsApi.getAdressTransaction(account);
 
-        console.log(data);
+        //console.log(data);
         setTransection(data);
     }, [account]);
     useEffect(() => {
