@@ -1,10 +1,15 @@
 import styled from "styled-components/native";
 import { Ionicons } from "@expo/vector-icons";
-import { ListItem, TextInput } from "@react-native-material/core";
+import {
+    ActivityIndicator,
+    ListItem,
+    TextInput,
+} from "@react-native-material/core";
 import { useWallet } from "../providers/WalletProvider";
 import { useEffect, useState } from "react";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { intValidate } from "../utils/userInfo";
+import { Alert, ToastAndroid } from "react-native";
 
 const Wrapper = styled.View`
     width: 100%;
@@ -97,14 +102,18 @@ const ErrorText = styled.Text`
     color: #d84b4b;
 `;
 
-export default function Send() {
-    const { web3, payContract, account, klayToKrw, balance } = useWallet();
+export default function Send({ navigation }) {
+    navigation.navigate("SendModal", { klay: 10, receipt: "test" });
+    const { web3, payContract, account, klayToKrw, balance, noti } =
+        useWallet();
     const [klay, setKlay] = useState("0");
     const [fee, setFee] = useState(1);
     const [sendKlay, setSendKlay] = useState(0);
     const [formError, setFormError] = useState({ klay: false, address: false });
     const [sendAddress, setSendAddress] = useState();
-    console.log(account);
+    const [loading, setLoading] = useState(false);
+
+    //console.log(account);
     const changeSendKlay = (klay) => {
         if (!intValidate(klay)) {
             console.log("false");
@@ -121,8 +130,12 @@ export default function Send() {
     };
 
     const completeForm = () => {
+        //setLoading(true);
+
         if (!web3.utils.isAddress(sendAddress)) {
             setFormError({ ...formError, address: true });
+
+            //setLoading(false);
             return;
         }
 
@@ -136,14 +149,23 @@ export default function Send() {
             })
             .then((receipt) => {
                 console.log(receipt);
+                navigation.push("SendModal", {
+                    klay: sendKlay,
+                    receipt: receipt,
+                    sendAddress: account,
+                    receiver: sendAddress,
+                    fee: fee,
+                });
             })
             .catch((err) => {
+                Alert.alert("filed", err);
                 console.log(err);
             });
+        //setLoading(false);
     };
 
     useEffect(() => {
-        console.log(balance, balance["c"]);
+        //console.log(balance, balance["c"]);
         setFee(
             web3.utils.fromWei(
                 web3.utils.toBN("50000000000").mul(web3.utils.toBN(21000)),
@@ -152,12 +174,15 @@ export default function Send() {
         );
         //setKlay(balance);
     }, [balance]);
+
     return (
         <Wrapper>
             <WrapperContent>
                 <ContentHeader>
                     <ContentHeaderTextWrapper>
-                        <ContentHeaderText>송금하기</ContentHeaderText>
+                        <ContentHeaderText>
+                            송금하기 {loading ? "lloading" : null}
+                        </ContentHeaderText>
                     </ContentHeaderTextWrapper>
                     <ContentHeaderLoadingWrapper>
                         <LoadingTouch>
@@ -251,7 +276,9 @@ export default function Send() {
                 </ContentBody>
                 <ContentFooter>
                     <ContentFooterButtonWrapper onPress={() => completeForm()}>
-                        <ContentFooterText>전송 </ContentFooterText>
+                        <ContentFooterText>
+                            {loading ? <ActivityIndicator /> : "전송"}
+                        </ContentFooterText>
                     </ContentFooterButtonWrapper>
                 </ContentFooter>
             </WrapperContent>

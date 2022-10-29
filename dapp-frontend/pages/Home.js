@@ -111,8 +111,6 @@ const AddressText = styled.Text`
     font-weight: bold;
 `;
 
-const start = async () => {};
-
 export default function Home({ navigation }) {
     const { account, balance, nickName, klayToKrw } = useWallet();
 
