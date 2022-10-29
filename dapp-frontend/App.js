@@ -13,6 +13,7 @@ import RegisterStackScreen from "./Navigation";
 import { decode, encode } from "base-64";
 import ScanQR from "./pages/ScanQR";
 import MakePayment from "./pages/MakePayment";
+import WalletProvider from "./providers/WalletProvider";
 
 /*
 const Wrapper = styled.View`
@@ -84,38 +85,40 @@ export default function App() {
     }
     return (
         <DBContext.Provider value={{ realm, changePassword, password }}>
-            <View
-                onLayout={onLayoutRootView}
-                style={{ width: "100%", height: "100%" }}
-            >
-                <NavigationContainer>
-                    <Stack.Navigator
-                        screenOptions={{
-                            headerShown: false,
-                            presentation: "modal",
-                        }}
-                    >
-                        {realm.objects("User").length < 1 ? (
-                            <Stack.Screen
-                                name="Register"
-                                component={RegisterStackScreen}
-                            />
-                        ) : password ? (
-                            <>
-                                <Stack.Screen name="Home" component={Home} />
-                                <Stack.Screen name="User" component={Home} />
-                                <Stack.Screen name="ScanQR" component={ScanQR} />
-                                <Stack.Screen name="MakePayment" component={MakePayment} />
-                            </>
-                        ) : (
-                            <Stack.Screen
-                                name="Password"
-                                component={Password}
-                            />
-                        )}
-                    </Stack.Navigator>
-                </NavigationContainer>
-            </View>
+            <WalletProvider>
+                <View
+                    onLayout={onLayoutRootView}
+                    style={{ width: "100%", height: "100%" }}
+                >
+                    <NavigationContainer>
+                        <Stack.Navigator
+                            screenOptions={{
+                                headerShown: false,
+                                presentation: "modal",
+                            }}
+                        >
+                            {realm.objects("User").length < 1 ? (
+                                <Stack.Screen
+                                    name="Register"
+                                    component={RegisterStackScreen}
+                                />
+                            ) : password ? (
+                                <>
+                                    <Stack.Screen name="Home" component={Home} />
+                                    <Stack.Screen name="User" component={Home} />
+                                    <Stack.Screen name="ScanQR" component={ScanQR} />
+                                    <Stack.Screen name="MakePayment" component={MakePayment} />
+                                </>
+                            ) : (
+                                <Stack.Screen
+                                    name="Password"
+                                    component={Password}
+                                />
+                            )}
+                        </Stack.Navigator>
+                    </NavigationContainer>
+                </View>
+            </WalletProvider>
         </DBContext.Provider>
     );
 }

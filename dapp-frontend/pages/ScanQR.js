@@ -16,7 +16,6 @@ const Wrapper = styled.View`
 export default function ScanQR({ route, navigation }) {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
-    const [uuid, setUuid] = useState('');
   
     useEffect(() => {
       const getBarCodeScannerPermissions = async () => {
@@ -36,12 +35,10 @@ export default function ScanQR({ route, navigation }) {
   
     const handleCodeScanned = ({ type, data }) => {
       setScanned(true);
-      setUuid(data);
-      alert(`UUID : ${data}`);
+      const params = JSON.parse(data);
+      console.log(params);
       const { redirectTo } = route.params;
-      navigation.navigate(redirectTo, {
-        uuid: data,
-      });
+      navigation.navigate(redirectTo, params);
     };
   
     if (hasPermission === null) {
