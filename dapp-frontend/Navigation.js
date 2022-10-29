@@ -93,6 +93,7 @@ export function HomeStackScreen() {
             <HomeStack.Group screenOptions={{ presentation: "modal" }}>
                 <HomeStack.Screen name="QRModal" component={PayQR} />
                 <HomeStack.Screen name="SendModal" component={SendComplete} />
+                <HomeStack.Screen name="Histroy" component={History} />
             </HomeStack.Group>
         </HomeStack.Navigator>
     );
