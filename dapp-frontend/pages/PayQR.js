@@ -102,16 +102,18 @@ const ButtonText = styled.Text`
     font-weight: bold;
 `;
 
-export default function PayQR({ navigation }) {
-    const [pay, setPay] = useState({});
+export default function PayQR({ navigation, route }) {
+    const { payDoc } = route.params;
+    //const [pay, setPay] = useState({});
     const realm = useRealm();
     const [address, setAddr] = useState();
     const [qRValue, setQRValue] = useState();
     useEffect(() => {
         const userInfo = realm.objects(TableName)[0];
-        setQRValue({ ...pay, date: afterMinute(10) });
+        setQRValue({ ...payDoc, date: afterMinute(10) });
         setAddr(userInfo.address);
-    }, []);
+    }, [payDoc]);
+
     const pop = () => {
         navigation.navigate("Home");
     };
@@ -138,7 +140,7 @@ export default function PayQR({ navigation }) {
                         </TranInfoHeaderWrapper>
                         <TranInfoContentWrapper>
                             <TranInfoContextText>
-                                {pay.uuid}
+                                {payDoc.uuid}
                             </TranInfoContextText>
                         </TranInfoContentWrapper>
                     </InfoContentWrapper>
@@ -148,7 +150,7 @@ export default function PayQR({ navigation }) {
                         </TranInfoHeaderWrapper>
                         <TranInfoContentWrapper>
                             <TranInfoContextText>
-                                {pay.klayPrice} klaytn
+                                {payDoc.klayPrice} klaytn
                             </TranInfoContextText>
                         </TranInfoContentWrapper>
                     </InfoContentWrapper>

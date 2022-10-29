@@ -149,6 +149,7 @@ export default function Send({ navigation }) {
             })
             .then((receipt) => {
                 console.log(receipt);
+                noti("송금 완료", sendKlay + "  KLAY 전송");
                 navigation.push("SendModal", {
                     klay: sendKlay,
                     receipt: receipt,
