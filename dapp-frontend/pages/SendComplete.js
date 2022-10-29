@@ -2,7 +2,7 @@ import styled from "styled-components/native";
 import { useWallet } from "../providers/WalletProvider";
 import { AntDesign } from "@expo/vector-icons";
 import { Button, Divider } from "@react-native-material/core";
-import { StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 
 const Wrapper = styled.View`
     width: 100%;
@@ -100,8 +100,9 @@ const ContentFooterHeaderText = styled.Text`
 `;
 
 const ContentFooterLog = styled.View`
+    overflow-y: scroll;
     width: 100%;
-    height: 85%;
+    height: 60%;
 `;
 const ContentFooterLogText = styled.Text`
     color: #525f7f;
@@ -189,9 +190,11 @@ export default function SendComplete({ route, navigation }) {
                         </ContentFooterHeaderText>
                     </ContentFooterHeader>
                     <ContentFooterLog>
-                        <ContentFooterLogText>
-                            {stringReceipt}
-                        </ContentFooterLogText>
+                        <ScrollView>
+                            <ContentFooterLogText>
+                                {stringReceipt}
+                            </ContentFooterLogText>
+                        </ScrollView>
                     </ContentFooterLog>
                 </ContentFooter>
             </ContentWrapper>

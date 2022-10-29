@@ -5,7 +5,7 @@ import {
     TextInput,
 } from "@react-native-material/core";
 import { Ionicons } from "@expo/vector-icons";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import uuid from "react-native-uuid";
 import { Alert, Text } from "react-native";
 //import { ToastAndroid } from "react-native";
