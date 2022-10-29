@@ -5,7 +5,7 @@ import { Fontisto } from "@expo/vector-icons";
 import { useEffect } from "react";
 import { ActivityIndicator } from "@react-native-material/core";
 import { useWallet } from "../providers/WalletProvider";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons, Octicons, Ionicons } from "@expo/vector-icons";
 
 const Wrapper = styled.View`
     width: 100%;
@@ -140,8 +140,8 @@ export default function Home({ navigation }) {
                     </AssetsContent>
                     <AssetsContentRoad>
                         <LoadTouch onPress={() => loadBalance()}>
-                            <MaterialIcons
-                                name="history-edu"
+                            <Ionicons
+                                name="ios-reload-outline"
                                 size={24}
                                 color="black"
                             />
@@ -161,9 +161,11 @@ export default function Home({ navigation }) {
                                     CONNECTING
                                 </MainHeaderContentName>
                             </MainContentHeaderLeft>
-                            <LoadTouch>
-                                <Octicons
-                                    name="history"
+                            <LoadTouch
+                                onPress={() => navigation.push("History")}
+                            >
+                                <MaterialIcons
+                                    name="history-edu"
                                     size={24}
                                     color="black"
                                 />

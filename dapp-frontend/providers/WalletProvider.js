@@ -50,11 +50,29 @@ const WalletProvider = ({ children }) => {
     const [notification, setNotification] = useState(false);
     const notificationListener = useRef();
     const responseListener = useRef();
+    const [transaction, setTransection] = useState(null);
 
     const loadExchangeRate = useCallback(async () => {
         const data = await coinsApi.getKlayPriceKrw();
         setKlayToKrw(data["klay-token"]["krw"]);
     }, []);
+
+    const loadTransaction = useCallback(async () => {
+        console.log("call");
+
+        if (!account) {
+            return null;
+        }
+        const data = await coinsApi.getAdressTransaction(account);
+
+        console.log(data);
+        setTransection(data);
+    }, [account]);
+    useEffect(() => {
+        const data = loadTransaction();
+        console.log(data);
+        setTransection(data);
+    }, [loadTransaction]);
 
     async function noti(title, body) {
         await Notifications.scheduleNotificationAsync({
@@ -138,6 +156,8 @@ const WalletProvider = ({ children }) => {
             loadAccount,
             loadBalance,
             noti,
+            transaction,
+            loadTransaction,
         }),
         [account, balance, loadAccount, loadBalance]
     );
