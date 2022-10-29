@@ -7,7 +7,6 @@ import RealmProvider from "./providers/RealmProvider";
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-
     return (
         <RealmProvider>
             <WalletProvider>

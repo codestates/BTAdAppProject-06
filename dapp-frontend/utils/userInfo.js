@@ -12,6 +12,16 @@ export const pwValidate = (pw) => {
     }
     return false;
 };
+
+export const intValidate = (pw) => {
+    for (let i = 0; i < pw.length; i++) {
+        let code = pw.charCodeAt(i);
+        if (48 > code || 58 < code) {
+            return false;
+        }
+    }
+    return true;
+};
 export const afterMinute = (m) => {
     var tDate = new Date(Date.now());
     tDate.setMinutes(tDate.getMinutes() + m);
