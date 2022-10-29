@@ -170,7 +170,8 @@ export default function CreatePayment({ navigation }) {
             //ToastAndroid("결제 생성 성공", receipt);
             console.log(receipt);
             // TODO : Navigation 파라미터로 넘기고, 이후 QRModal에서 처리 필요
-            navigation.navigate("QRModal", payDoc);
+            // FIX:  파라미터 넘기는 부분 해당 부분 수정
+            navigation.navigate("QRModal", { payDoc: payDoc });
         } catch (e) {
             console.error(e, "실패s");
         }
