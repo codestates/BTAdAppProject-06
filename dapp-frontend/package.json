@@ -17,10 +17,9 @@
     "@react-navigation/native": "^6.0.13",
     "@react-navigation/native-stack": "^6.9.1",
     "@tanstack/react-query": "^4.13.0",
-    "base-64": "^1.0.0",
     "Base64": "^1.1.0",
+    "base-64": "^1.0.0",
     "buffer": "^4.9.1",
-    "caver-js": "^1.9.0",
     "crypto-js": "^4.1.1",
     "eth-lightwallet": "^4.0.0",
     "ethers": "^5.7.2",
@@ -30,7 +29,6 @@
     "expo-splash-screen": "^0.16.2",
     "expo-status-bar": "~1.4.0",
     "install": "^0.13.0",
-    "npm": "^8.19.2",
     "react": "18.0.0",
     "react-dom": "18.0.0",
     "react-native": "0.69.6",
@@ -60,14 +58,14 @@
     "styled-components": "^5.3.6",
     "styled-components-react-native": "^1.0.0",
     "vm-browserify": "^0.0.4",
-    "web3": "^1.8.0",
-    "yarn": "^1.22.19"
+    "web3": "^1.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.18.6",
     "@types/styled-components": "^5.1.26",
     "@types/styled-components-react-native": "^5.1.3",
-    "rn-nodeify": "github:tradle/rn-nodeify"
+    "rn-nodeify": "github:tradle/rn-nodeify",
+    "yarn": "^1.22.19"
   },
   "private": true,
   "react-native": {
