@@ -68,8 +68,6 @@ return (
         <NormalText>{klayPrice} KLAY</NormalText>
       </TableRow>
 
-
-
     </PageContent>
     <PageFooter>
       <CustomButton onPress={pay}>결제하기</CustomButton>

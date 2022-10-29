@@ -116,7 +116,7 @@ const AddressText = styled.Text`
     font-weight: bold;
 `;
 
-const start = async () => {};
+const start = async () => { };
 
 export default function Home({ navigation }) {
     const { realm, changeWonExchange, web3 } = useDB();
@@ -160,12 +160,12 @@ export default function Home({ navigation }) {
                             {isLoading
                                 ? null
                                 : `1 klay 당 ${price["klay-token"]["krw"]}원` +
-                                  "  => " +
-                                  balance *
-                                      parseInt(
-                                          price["klay-token"]["krw"]
-                                      ).toString() +
-                                  " 원"}
+                                "  => " +
+                                balance *
+                                parseInt(
+                                    price["klay-token"]["krw"]
+                                ).toString() +
+                                " 원"}
                         </Text>
                     </AssetsContent>
                 </AssetsWrapper>
@@ -206,7 +206,9 @@ export default function Home({ navigation }) {
                             </DivButton>
                             <DivButton
                                 color="#6e72e4"
-                                onPress={() => navigation.push("Scan")}
+                                onPress={() => navigation.push("Scan", {
+                                    redirectTo: 'MakePayment'
+                                })}
                             >
                                 <MainButtonText>QR 스캔</MainButtonText>
                             </DivButton>

@@ -6,6 +6,7 @@ import Payment from "./pages/Payment";
 import PayQR from "./pages/PayQR";
 import Register from "./pages/Register";
 import ScanQR from "./pages/ScanQR";
+import MakePayment from "./pages/MakePayment";
 
 const RegisterStack = createNativeStackNavigator();
 
@@ -30,6 +31,7 @@ export function HomeStackScreen() {
             <HomeStack.Screen name="Home" component={Home} />
             <HomeStack.Screen name="Scan" component={ScanQR} />
             <HomeStack.Screen name="Pay" component={Payment} />
+            <HomeStack.Screen name="MakePayment" component={MakePayment} />
             <HomeStack.Group screenOptions={{ presentation: "modal" }}>
                 <HomeStack.Screen name="QRModal" component={PayQR} />
             </HomeStack.Group>
