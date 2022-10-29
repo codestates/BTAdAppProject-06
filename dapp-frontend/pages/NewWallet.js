@@ -2,14 +2,11 @@ import styled from "styled-components/native";
 import { Fontisto } from "@expo/vector-icons";
 import { StyleSheet, Text, TextInput as Ti } from "react-native";
 import { useEffect, useState } from "react";
-import "react-native-get-random-values";
-import "@ethersproject/shims";
-import { ethers } from "ethers";
 import { Button, TextInput } from "@react-native-material/core";
-import { useDB } from "../context";
 import { pwValidate, TableName } from "../utils/userInfo";
 import { md5Encrypt, ojbToString } from "../utils/wallet";
-import "react-native-get-random-values";
+import { useWallet } from "../providers/WalletProvider";
+import { useRealm } from "../providers/RealmProvider";
 
 const LogoText = styled.Text`
     color: #000000;
@@ -108,54 +105,33 @@ const MnemonicCon = styled.View`
 
 export default function NewWallet({ navigation }) {
     const [value, setChangeValue] = useState({});
-    const [user, setUser] = useState({});
-    const { realm, changePassword, web3 } = useDB();
+    const {web3} = useWallet();
+    const realm = useRealm();
     const [pwHelp, setPwHelp] = useState(false);
-    const [priv, setPriv] = useState();
     const [wallet, setWallet] = useState();
-    //console.log("get realm", realm);
+
     useEffect(() => {
-        const wallet = web3.eth.accounts.create();
-        setPriv(wallet.privateKey);
+        const wallet = web3.eth.accounts.create(Math.random() * 1000 + '');
         setWallet(wallet);
-        //const createWallet = async () => {
-        //let randSeed = await ethers.Wallet.createRandom();
-        setUser({
-            addr: wallet.address,
-            //    mne: randSeed.mnemonic.phrase,
-            //    priv: randSeed.privateKey,
-        });
-        //console.log(wallet);
-        //};
-        //createWallet();
     }, []);
 
     const completeForm = () => {
-        //console.log(value);
+
         if (pwValidate(value.pw)) {
             setPwHelp(true);
             return;
         }
-        let enc = web3.eth.accounts.encrypt(priv, value.pw);
-        //let dnc = web3.eth.accounts.decrypt(JSON.parse(enc), value.pw);
-        //console.log(enc);
-        //console.log(dnc);
-        //console.log(enc, "enc");
-        //changePassword(value.pw);
-        //console.log(realm.objects("User"));
-        //console.log(JSON.stringify(aes256Encrypt(user.priv, value.pw)));
-        //console.log(md5Encrypt(value.pw));
+        let enc = wallet.encrypt(value.pw);
+
         realm.write(() => {
             realm.create(TableName, {
                 _id: Date.now(),
                 nickName: value.nick,
                 secureKey: ojbToString(enc),
                 pwMD5: ojbToString(md5Encrypt(value.pw)),
-                address: user.addr,
             });
         });
 
-        changePassword(value.pw);
         navigation.goBack();
     };
 
@@ -178,7 +154,7 @@ export default function NewWallet({ navigation }) {
                             <TextInput
                                 multiline
                                 variant="outlined"
-                                defaultValue={priv}
+                                defaultValue={wallet?.privateKey}
                                 editable={false}
                             />
                         </MnemonicCon>
@@ -207,6 +183,7 @@ export default function NewWallet({ navigation }) {
                                         </Text>
                                     ) : null
                                 }
+                                secureTextEntry
                             ></TextInput>
                         </IdWrppaer>
                     </UserWrapper>

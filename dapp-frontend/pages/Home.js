@@ -1,15 +1,10 @@
-import { SafeAreaView, Text } from "react-native";
+import { Text } from "react-native";
 import styled from "styled-components/native";
 import QRCode from "react-native-qrcode-svg";
 import { Fontisto } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
-import { useDB } from "../context";
-//import { useNavigation } from "@react-navigation/native";
-import { TableName } from "../utils/userInfo";
-import { coinsApi } from "../utils/api";
-import { useQuery } from "@tanstack/react-query";
-import { toKlay } from "../utils/wallet";
+import { useEffect } from "react";
 import { ActivityIndicator } from "@react-native-material/core";
+import { useWallet } from "../providers/WalletProvider";
 
 const Wrapper = styled.View`
     width: 100%;
@@ -119,51 +114,20 @@ const AddressText = styled.Text`
 const start = async () => { };
 
 export default function Home({ navigation }) {
-    const { realm, changeWonExchange, web3 } = useDB();
-    const [address, setAddr] = useState();
-    const [balance, setBalance] = useState(0);
-    const [nick, setNick] = useState();
-    const {
-        data: price,
-        isLoading,
-        error,
-    } = useQuery(["coin"], coinsApi.getKlayPriceKrw);
-    const [loading, setLoading] = useState(false);
-    //console.log(price);
-    useEffect(() => {
-        // get info of user from realmDB
-        const userInfo = realm.objects(TableName)[0];
-
-        setNick(userInfo.nickName);
-        // get user balance
-        web3.eth
-            .getBalance(userInfo.address)
-            .then((res) => setBalance(toKlay(res)));
-
-        setAddr(userInfo.address);
-        setLoading(false);
-    }, []);
-
-    useEffect(() => {
-        if (!isLoading) {
-            changeWonExchange(price["klay-token"]["krw"]);
-        }
-    }, [price]);
+    const {account, balance, nickName, klayToKrw} = useWallet();
 
     return (
         <Wrapper>
             <ContentWrapper>
                 <AssetsWrapper>
                     <AssetsContent>
-                        <Text>{balance} klay</Text>
+                        <Text>{balance?.toString()} klay</Text>
                         <Text>
-                            {isLoading
-                                ? null
-                                : `1 klay 당 ${price["klay-token"]["krw"]}원` +
+                            {`1 klay 당 ${klayToKrw}원` +
                                 "  => " +
                                 balance *
                                 parseInt(
-                                    price["klay-token"]["krw"]
+                                    klayToKrw
                                 ).toString() +
                                 " 원"}
                         </Text>
@@ -182,9 +146,9 @@ export default function Home({ navigation }) {
                             </MainHeaderContentName>
                         </MainContentHeader>
                         <MainContentBody>
-                            <QRCode value={address} />
+                            <QRCode value={account} />
                             <AddressText>
-                                {nick ? "Hello! 👋 " + nick : address}
+                                {nickName ? "Hello! 👋 " + nickName : account}
                             </AddressText>
                         </MainContentBody>
                         <MainContentButtonWrapper>
@@ -194,14 +158,14 @@ export default function Home({ navigation }) {
                             <DivButton
                                 color="#6e72e4"
                                 onPress={() => {
-                                    navigation.navigate("Pay");
+                                    navigation.navigate("CreatePayment");
                                 }}
                             >
-                                {loading ? (
+                                {balance === null ? (
                                     <ActivityIndicator color="blue" />
                                 ) : null}
                                 <MainButtonText>
-                                    {loading ? "loading" : "결제생성"}
+                                    {balance === null ? "loading" : "결제생성"}
                                 </MainButtonText>
                             </DivButton>
                             <DivButton

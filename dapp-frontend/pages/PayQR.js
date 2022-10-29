@@ -2,10 +2,10 @@
 import QRCode from "react-native-qrcode-svg";
 import styled from "styled-components/native";
 //import { Fontisto } from "@expo/vector-icons";
-import { useDB } from "../context";
 //import { Text } from "react-native";
 import { useEffect, useState } from "react";
 import { afterMinute, TableName } from "../utils/userInfo";
+import { useRealm } from "../providers/RealmProvider";
 const Wrapper = styled.View`
     width: 100%;
     height: 100%;
@@ -103,12 +103,10 @@ const ButtonText = styled.Text`
 `;
 
 export default function PayQR({ navigation }) {
-    //const navi = useNavigation()
-    //navi.
-    const { pay, realm } = useDB();
+    const [pay, setPay] = useState({});
+    const realm = useRealm();
     const [address, setAddr] = useState();
     const [qRValue, setQRValue] = useState();
-    //console.log("pay", pay);
     useEffect(() => {
         const userInfo = realm.objects(TableName)[0];
         setQRValue({ ...pay, date: afterMinute(10) });

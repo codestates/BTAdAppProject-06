@@ -4,14 +4,14 @@ import { Alert, StyleSheet, Text, TextInput as Ti } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
 import { Stack, TextInput, Button } from "@react-native-material/core";
-//import { User } from "realm";
-import { useDB } from "../context";
 import { pwValidate, TableName } from "../utils/userInfo";
 import "react-native-get-random-values";
 import "@ethersproject/shims";
 import { ethers } from "ethers";
 import { aes256Encrypt, md5Encrypt, ojbToString } from "../utils/wallet";
 import "react-native-get-random-values";
+import { useRealm } from "../providers/RealmProvider";
+import { useWallet } from "../providers/WalletProvider";
 
 const LogoText = styled.Text`
     color: #000000;
@@ -97,8 +97,8 @@ const ButtonText = styled.Text`
 `;
 
 export default function ImportWallet({ navigation }) {
-    const [value, onChangeText] = useState("");
-    const { realm, changePassword, password, web3 } = useDB();
+    const { web3 } = useWallet();
+    const realm = useRealm();
     const [form, setForm] = useState({});
     const [pwHelp, setPwHelp] = useState(false);
 
@@ -117,18 +117,16 @@ export default function ImportWallet({ navigation }) {
         }
         const wallet = ethers.Wallet.fromMnemonic(mnes);
         const priv = wallet.privateKey;
-        let enc = web3.eth.accounts.encrypt(priv, form.pw);
+        const enc = web3.eth.accounts.encrypt(priv, form.pw);
         realm.write(() => {
             realm.create(TableName, {
                 _id: Date.now(),
                 nickName: form.nick,
                 secureKey: ojbToString(enc),
                 pwMD5: ojbToString(md5Encrypt(form.pw)),
-                address: wallet.address,
             });
         });
 
-        changePassword(form.pw);
         navigation.goBack();
     };
 
