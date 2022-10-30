@@ -1,16 +1,12 @@
 import { registerRootComponent } from "expo";
 
-import App from "./App";
-import { decode, encode } from "base-64";
-//import { Provider as PaperProvider } from "react-native-paper";
-if (!global.btoa) {
-    global.btoa = encode;
-}
+//import { StyleSheet, Text, View, LogBox } from "react-native";
+//LogBox.ignoreLogs(["Warning: ..."]);
 
-if (!global.atob) {
-    global.atob = decode;
-}
-window.atob = require("Base64").atob;
+import App from "./App";
+//import { decode, encode } from "base-64";
+//import { Provider as PaperProvider } from "react-native-paper";
+
 // registerRootComponent calls AppRegistry.registerComponent('main', () => App);
 // It also ensures that whether you load the app in Expo Go or in a native build,
 // the environment is set up appropriately
