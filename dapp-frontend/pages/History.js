@@ -34,8 +34,6 @@ const getItem = (data, index) => {
     };
 };
 
-const getItemCount = (data) => 8;
-
 const ItemWrapper = styled.View`
     width: 100%;
     height: 200px;
@@ -125,28 +123,30 @@ const Item = ({ item }) => {
 export default function History() {
     const { account, transaction, loadTransaction } = useWallet();
     const [refreshing, setRefreshing] = useState(false);
-    const [num, setNum] = useState(8);
+    const [num, setNum] = useState(transaction.length);
+    const getItemCount = (data) => num;
     const onRefresh = async () => {
         setRefreshing(true);
         loadTransaction();
         setRefreshing(false);
     };
     const loadMore = () => {
-        //console.log("test");
-        setNum(num + 4);
+        if(num < transaction.length) {
+            setNum(num + 4);
+        }
     };
     return (
         <SafeAreaView style={styles.container}>
             <Wrapper>
                 <VirtualizedList
                     data={transaction}
-                    initialNumToRender={8}
+                    initialNumToRender={4}
                     getItem={getItem}
                     getItemCount={getItemCount}
                     renderItem={({ item }) => <Item item={item} />}
-                    keyExtractor={(item) => item.key}
+                    keyExtractor={(item) => item.txHash}
                     onEndReached={loadMore}
-                    onEndReachedThreshold={num}
+                    onEndReachedThreshold={0.1}
                     onRefresh={onRefresh}
                     refreshing={refreshing}
                 />
