@@ -112,7 +112,7 @@ const Item = ({ item }) => {
             </ItemRow>
             <ItemRow>
                 <ItemRowHeader>
-                    <ContentText>트랜잰션</ContentText>
+                    <ContentText>트랜잭션</ContentText>
                 </ItemRowHeader>
                 <ItemRowContent>
                     <ContentText>{item.txHash}</ContentText>
@@ -145,8 +145,8 @@ export default function History() {
                     getItemCount={getItemCount}
                     renderItem={({ item }) => <Item item={item} />}
                     keyExtractor={(item) => item.key}
-                    //onEndReached={num}
-                    //onEndReachedThreshold={loadMore}
+                    onEndReached={loadMore}
+                    onEndReachedThreshold={num}
                     onRefresh={onRefresh}
                     refreshing={refreshing}
                 />

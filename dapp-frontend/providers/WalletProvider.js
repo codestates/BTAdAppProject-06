@@ -57,6 +57,10 @@ const WalletProvider = ({ children }) => {
         setKlayToKrw(data["klay-token"]["krw"]);
     }, []);
 
+    useEffect(() => {
+        loadExchangeRate();
+    }, [loadExchangeRate]);
+
     const loadTransaction = useCallback(async () => {
         //console.log("call");
 
@@ -68,6 +72,7 @@ const WalletProvider = ({ children }) => {
         //console.log(data);
         setTransection(data);
     }, [account]);
+
     useEffect(() => {
         const data = loadTransaction();
         console.log(data);
@@ -86,7 +91,6 @@ const WalletProvider = ({ children }) => {
     }
 
     useEffect(() => {
-        loadExchangeRate();
         registerForPushNotificationsAsync().then((token) =>
             setExpoPushToken(token)
         );
@@ -111,7 +115,7 @@ const WalletProvider = ({ children }) => {
                 responseListener.current
             );
         };
-    }, [loadExchangeRate]);
+    }, []);
 
     const loadAccount = useCallback(
         (password) => {
